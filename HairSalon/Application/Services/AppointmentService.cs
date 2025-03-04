@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,33 +13,44 @@ namespace Application.Services
     public class AppointmentService : IAppointmentService
     {
         private IAppointmentRepository appointmentRepository;
-        public AppointmentService (IAppointmentRepository appointmentRepository)
+        private IMapper mapper;
+        public AppointmentService (IAppointmentRepository appointmentRepository, IMapper mapper)
         {
             this.appointmentRepository = appointmentRepository;
+            this.mapper = mapper;
         }
-        public Task Create(AppointmentDTO appointment)
+        public async Task Add(AppointmentDTO appointment)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<AppointmentDTO>> ReadAll()
-        {
-            throw new NotImplementedException();
+            var mappedAppointment = mapper.Map<Appointment>(appointment);
+            if (mappedAppointment != null)
+            {
+                await appointmentRepository.Create(mappedAppointment);
+            }
         }
 
-        public Task<AppointmentDTO?> ReadById(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await appointmentRepository.Delete(id);
         }
 
-        public Task<bool> Update(AppointmentDTO appointment)
+        public async Task<List<AppointmentDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var appointments = await appointmentRepository.ReadAll();
+            var mappedAppointments = appointments.Select(q => mapper.Map<AppointmentDTO>(q)).ToList();
+            return mappedAppointments;
+        }
+
+        public async Task<AppointmentDTO?> GetById(int id)
+        {
+            var appointment = await appointmentRepository.ReadById(id);
+            var mappedAppointment = mapper.Map<AppointmentDTO>(appointment);
+            return mappedAppointment;
+        }
+
+        public async Task<bool> Update(AppointmentDTO appointment)
+        {
+            var mappedAppointment = mapper.Map<Appointment>(appointment);
+            return await appointmentRepository.Update(mappedAppointment);
         }
     }
 }

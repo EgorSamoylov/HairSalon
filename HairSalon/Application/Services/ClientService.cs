@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,33 +13,44 @@ namespace Application.Services
     public class ClientService : IClientService
     {
         private IClientRepository clientRepository;
-        public  ClientService(IClientRepository clientRepository)
+        private IMapper mapper;
+        public  ClientService(IClientRepository clientRepository, IMapper mapper)
         {
             this.clientRepository = clientRepository;
+            this.mapper = mapper;
         }
-        public Task Create(ClientDTO client)
+        public async Task Add(ClientDTO client)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<ClientDTO>> ReadAll()
-        {
-            throw new NotImplementedException();
+            var mappedClient = mapper.Map<Client>(client);
+            if (mappedClient != null)
+            {
+                await clientRepository.Create(mappedClient);
+            }
         }
 
-        public Task<ClientDTO?> ReadById(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await clientRepository.Delete(id);
         }
 
-        public Task<bool> Update(ClientDTO client)
+        public async Task<List<ClientDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var clients = await clientRepository.ReadAll();
+            var mappedClient = clients.Select(q => mapper.Map<ClientDTO>(q)).ToList();
+            return mappedClient;
+        }
+
+        public async Task<ClientDTO?> GetById(int id)
+        {
+            var client = await clientRepository.ReadById(id);
+            var mappedClient = mapper.Map<ClientDTO>(client);
+            return mappedClient;
+        }
+
+        public async Task<bool> Update(ClientDTO client)
+        {
+            var mappedClient = mapper.Map<Client>(client);
+            return await clientRepository.Update(mappedClient);
         }
     }
 }

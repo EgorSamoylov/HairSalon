@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,33 +13,44 @@ namespace Application.Services
     public class ServiceService : IServiceService
     {
         private IServiceRepository serviceRepository;
-        public ServiceService (IServiceRepository serviceRepository)
+        private IMapper mapper;
+        public ServiceService (IServiceRepository serviceRepository, IMapper mapper)
         {
             this.serviceRepository = serviceRepository;
+            this.mapper = mapper;
         }
-        public Task Add(ServiceDTO service)
+        public async Task Add(ServiceDTO service)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<ServiceDTO>> GetAll()
-        {
-            throw new NotImplementedException();
+            var mappedService = mapper.Map<Service>(service);
+            if (mappedService != null)
+            {
+                await serviceRepository.Create(mappedService);
+            }
         }
 
-        public Task<ServiceDTO?> GetById(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await serviceRepository.Delete(id);
         }
 
-        public Task<bool> Update(ServiceDTO service)
+        public async Task<List<ServiceDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var services = await serviceRepository.ReadAll();
+            var mappedServices = services.Select(q => mapper.Map<ServiceDTO>(q)).ToList();
+            return mappedServices;
+        }
+
+        public async Task<ServiceDTO?> GetById(int id)
+        {
+            var service = await serviceRepository.ReadById(id);
+            var mappedService = mapper.Map<ServiceDTO>(service);
+            return mappedService;
+        }
+
+        public async Task<bool> Update(ServiceDTO service)
+        {
+            var mappedService = mapper.Map<Service>(service);
+            return await serviceRepository.Update(mappedService);
         }
     }
 }

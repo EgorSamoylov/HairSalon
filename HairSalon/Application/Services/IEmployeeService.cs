@@ -10,9 +10,9 @@ namespace Application.Services
 {
     public interface IEmployeeService
     {
-        public Task<EmployeeDTO?> ReadById(int id);
-        public Task<List<EmployeeDTO>> ReadAll();
-        public Task Create(EmployeeDTO employee);
+        public Task<EmployeeDTO?> GetById(int id);
+        public Task<List<EmployeeDTO>> GetAll();
+        public Task Add(EmployeeDTO employee);
         public Task<bool> Update(EmployeeDTO employee);
         public Task<bool> Delete(int id);
     }

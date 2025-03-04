@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,33 +13,44 @@ namespace Application.Services
     public class EmployeeService : IEmployeeService
     {
         private IEmployeeRepository employeeRepository;
-        public EmployeeService(EmployeeRepository employeeRepository)
+        private IMapper mapper;
+        public EmployeeService(EmployeeRepository employeeRepository, IMapper mapper)
         {
             this.employeeRepository = employeeRepository;
+            this.mapper = mapper;
         }
-        public Task Create(EmployeeDTO employee)
+        public async Task Add(EmployeeDTO employee)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<EmployeeDTO>> ReadAll()
-        {
-            throw new NotImplementedException();
+            var mappedEmployee = mapper.Map<Employee>(employee);
+            if (employee != null)
+            {
+                await employeeRepository.Create(mappedEmployee);
+            }
         }
 
-        public Task<EmployeeDTO?> ReadById(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await employeeRepository.Delete(id);
         }
 
-        public Task<bool> Update(EmployeeDTO employee)
+        public async Task<List<EmployeeDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var employees = await employeeRepository.ReadAll();
+            var mappedEmployees = employees.Select(q => mapper.Map<EmployeeDTO>(q)).ToList();
+            return mappedEmployees;
+        }
+
+        public async Task<EmployeeDTO?> GetById(int id)
+        {
+            var employee = await employeeRepository.ReadById(id);
+            var mappedEmployee = mapper.Map<EmployeeDTO>(employee);
+            return mappedEmployee;
+        }
+
+        public async Task<bool> Update(EmployeeDTO employee)
+        {
+            var mappedemploee = mapper.Map<Employee>(employee);
+            return await employeeRepository.Update(mappedemploee);
         }
     }
 }
