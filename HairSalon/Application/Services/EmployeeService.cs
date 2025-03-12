@@ -14,7 +14,7 @@ namespace Application.Services
     {
         private IEmployeeRepository employeeRepository;
         private IMapper mapper;
-        public EmployeeService(EmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
         {
             this.employeeRepository = employeeRepository;
             this.mapper = mapper;
