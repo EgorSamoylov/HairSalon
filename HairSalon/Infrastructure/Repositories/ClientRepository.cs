@@ -9,40 +9,42 @@ namespace Infrastructure.Repositories
 {
     public class ClientRepository : IClientRepository
     {
-        private List<Client> clients = new List<Client>();
+        private List<Client> _clients = new List<Client>();
+
         public ClientRepository() { }
+
         public Task Create(Client client)
         {
-            clients.Add(client);
+            _clients.Add(client);
             return Task.CompletedTask;
         }
 
         public Task<bool> Delete(int id)
         {
-            if (!clients.Any(x => x.Id == id))
+            if (!_clients.Any(x => x.Id == id))
             {
                 return Task.FromResult(false);
             }
 
-            clients.RemoveAll(x => x.Id == id);
+            _clients.RemoveAll(x => x.Id == id);
 
             return Task.FromResult(true);
         }
 
         public Task<List<Client>> ReadAll()
         {
-            return Task.FromResult(clients);
+            return Task.FromResult(_clients);
         }
 
         public Task<Client?> ReadById(int id)
         {
-            var client = clients.Find(x => x.Id == id);
+            var client = _clients.Find(x => x.Id == id);
             return Task.FromResult(client);
         }
 
         public Task<bool> Update(Client client)
         {
-            var clientToUpdate = clients.Find(x => x.Id == client.Id);
+            var clientToUpdate = _clients.Find(x => x.Id == client.Id);
 
             if (clientToUpdate != null)
             {

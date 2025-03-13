@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,34 +12,50 @@ namespace Application.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        private IEmployeeRepository employeeRepository;
-        public EmployeeService(EmployeeRepository employeeRepository)
+        private readonly IEmployeeRepository _employeeRepository;
+        private IMapper _mapper;
+
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
         {
-            this.employeeRepository = employeeRepository;
-        }
-        public Task Create(EmployeeDTO employee)
-        {
-            throw new NotImplementedException();
+            _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<int> Add(EmployeeDTO employee)
         {
-            throw new NotImplementedException();
+            var mappedEmployee = _mapper.Map<Employee>(employee);
+            if (employee != null)
+            {
+                await _employeeRepository.Create(mappedEmployee);
+                return mappedEmployee.Id;
+            }
+
+            throw new ArgumentException("Failed to map EmployeeDTO to Employee"); //Или return -1;
         }
 
-        public Task<List<EmployeeDTO>> ReadAll()
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.Delete(id);
         }
 
-        public Task<EmployeeDTO?> ReadById(int id)
+        public async Task<IEnumerable<EmployeeDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var employees = await _employeeRepository.ReadAll();
+            var mappedEmployees = employees.Select(q => _mapper.Map<EmployeeDTO>(q)).ToList();
+            return mappedEmployees;
         }
 
-        public Task<bool> Update(EmployeeDTO employee)
+        public async Task<EmployeeDTO?> GetById(int id)
         {
-            throw new NotImplementedException();
+            var employee = await _employeeRepository.ReadById(id);
+            var mappedEmployee = _mapper.Map<EmployeeDTO>(employee);
+            return mappedEmployee;
+        }
+
+        public async Task<bool> Update(EmployeeDTO employee)
+        {
+            var mappedemploee = _mapper.Map<Employee>(employee);
+            return await _employeeRepository.Update(mappedemploee);
         }
     }
 }

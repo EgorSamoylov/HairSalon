@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public interface IServiceRepository
+    public interface IAmenityRepository
     {
-        public Task<Service?> ReadById(int id);
-        public Task<List<Service>> ReadAll();
-        public Task Create(Service service);
-        public Task<bool> Update(Service service);
+        public Task<Amenity?> ReadById(int id);
+        public Task<List<Amenity>> ReadAll();
+        public Task Create(Amenity service);
+        public Task<bool> Update(Amenity service);
         public Task<bool> Delete(int id);
     }
 }
