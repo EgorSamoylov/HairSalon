@@ -17,7 +17,7 @@ namespace Application
             services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
-            services.AddTransient<IServiceService, ServiceService>();
+            services.AddTransient<IAmenityService, AmenityService>();
             return services;
         }
     }

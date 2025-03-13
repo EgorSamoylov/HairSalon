@@ -11,8 +11,8 @@ namespace Application.Services
     public interface IAppointmentService
     {
         public Task<AppointmentDTO?> GetById(int id);
-        public Task<List<AppointmentDTO>> GetAll();
-        public Task Add(AppointmentDTO appointment);
+        public Task<IEnumerable<AppointmentDTO>> GetAll();
+        public Task<int> Add(AppointmentDTO appointment);
         public Task<bool> Update(AppointmentDTO appointment);
         public Task<bool> Delete(int id);
     }

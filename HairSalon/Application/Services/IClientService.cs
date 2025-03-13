@@ -11,8 +11,8 @@ namespace Application.Services
     public interface IClientService
     {
         public Task<ClientDTO?> GetById(int id);
-        public Task<List<ClientDTO>> GetAll();
-        public Task Add(ClientDTO client);
+        public Task<IEnumerable<ClientDTO>> GetAll();
+        public Task<int> Add(ClientDTO client);
         public Task<bool> Update(ClientDTO client);
         public Task<bool> Delete(int id);
     }

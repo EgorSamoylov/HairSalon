@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs
+namespace Domain.Entities
 {
-    public class ServiceDTO
+    // Услуга
+    public class Amenity 
     {
-        public int Id { get; set; }
+        public int Id { get ; set; }
         public string ServiceName { get; set; }
         public string? Description { get; set; }
         public int AuthorId { get; set; }

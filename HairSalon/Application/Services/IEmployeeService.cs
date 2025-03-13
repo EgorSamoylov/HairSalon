@@ -11,8 +11,8 @@ namespace Application.Services
     public interface IEmployeeService
     {
         public Task<EmployeeDTO?> GetById(int id);
-        public Task<List<EmployeeDTO>> GetAll();
-        public Task Add(EmployeeDTO employee);
+        public Task<IEnumerable<EmployeeDTO>> GetAll();
+        public Task<int> Add(EmployeeDTO employee);
         public Task<bool> Update(EmployeeDTO employee);
         public Task<bool> Delete(int id);
     }

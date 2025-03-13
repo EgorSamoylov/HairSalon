@@ -9,40 +9,42 @@ namespace Infrastructure.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
-        private List<Appointment> appointments = new List<Appointment>();
+        private List<Appointment> _appointments = new List<Appointment>();
+
         public AppointmentRepository() { }
+
         public Task Create(Appointment appointment)
         {
-            appointments.Add(appointment);
+            _appointments.Add(appointment);
             return Task.CompletedTask;
         }
 
         public Task<bool> Delete(int id)
         {
-            if (!appointments.Any(x => x.Id == id))
+            if (!_appointments.Any(x => x.Id == id))
             {
                 return Task.FromResult(false);
             }
 
-            appointments.RemoveAll(x => x.Id == id);
+            _appointments.RemoveAll(x => x.Id == id);
 
             return Task.FromResult(true);
         }
 
         public Task<List<Appointment>> ReadAll()
         {
-            return Task.FromResult(appointments);
+            return Task.FromResult(_appointments);
         }
 
         public Task<Appointment?> ReadById(int id)
         {
-            var appointment = appointments.Find(x => x.Id == id);
+            var appointment = _appointments.Find(x => x.Id == id);
             return Task.FromResult(appointment);
         }
 
         public Task<bool> Update(Appointment appointment)
         {
-            var appointmentToUpdate = appointments.Find(x => x.Id == appointment.Id);
+            var appointmentToUpdate = _appointments.Find(x => x.Id == appointment.Id);
 
             if (appointmentToUpdate != null)
             {

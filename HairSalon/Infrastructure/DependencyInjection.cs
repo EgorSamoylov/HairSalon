@@ -15,7 +15,7 @@ namespace Infrastructure
             services.AddSingleton<IAppointmentRepository, AppointmentRepository>();
             services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
             services.AddSingleton<IClientRepository, ClientRepository>();
-            services.AddSingleton<IServiceRepository, ServiceRepository>();
+            services.AddSingleton<IAmenityRepository, AmenityRepository>();
             return services;
         }
     }

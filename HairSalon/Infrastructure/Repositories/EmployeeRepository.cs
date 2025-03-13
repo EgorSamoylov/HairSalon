@@ -9,40 +9,42 @@ namespace Infrastructure.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private List<Employee> employees = new List<Employee>();
+        private List<Employee> _employees = new List<Employee>();
+
         public EmployeeRepository() { }
+
         public Task Create(Employee employee)
         {
-            employees.Add(employee);
+            _employees.Add(employee);
             return Task.CompletedTask;
         }
 
         public Task<bool> Delete(int id)
         {
-            if (!employees.Any(x => x.Id == id))
+            if (!_employees.Any(x => x.Id == id))
             {
                 return Task.FromResult(false);
             }
 
-            employees.RemoveAll(x => x.Id == id);
+            _employees.RemoveAll(x => x.Id == id);
 
             return Task.FromResult(true);
         }
 
         public Task<List<Employee>> ReadAll()
         {
-            return Task.FromResult(employees);
+            return Task.FromResult(_employees);
         }
 
         public Task<Employee?> ReadById(int id)
         {
-            var employee = employees.Find(x => x.Id == id);
+            var employee = _employees.Find(x => x.Id == id);
             return Task.FromResult(employee);
         }
 
         public Task<bool> Update(Employee employee)
         {
-            var employeeToUpdate = employees.Find(x => x.Id == employee.Id);
+            var employeeToUpdate = _employees.Find(x => x.Id == employee.Id);
 
             if (employeeToUpdate != null)
             {

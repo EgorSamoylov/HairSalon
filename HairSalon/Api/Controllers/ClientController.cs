@@ -9,44 +9,70 @@ namespace Api.Controllers
     [Route("[controller]")]
     public class ClientController : ControllerBase
     {
-        private IClientService clientService;
+        private IClientService _clientService;
+
         public ClientController(IClientService clientService)
         {
-            this.clientService = clientService;
+            this._clientService = clientService;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromQuery] int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var client = await clientService.GetById(id);
+            var client = await _clientService.GetById(id);
+            
+            if (client == null)
+            {
+                return NotFound();
+            }
+            
             return Ok(client);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var clients = await clientService.GetAll();
+            var clients = await _clientService.GetAll();
             return Ok(clients);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ClientDTO client)
         {
-            await clientService.Add(client);
-            return Created();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Возвращает 400 Bad Request с информацией об ошибках валидации
+            }
+
+            var clientId = await _clientService.Add(client);
+            var result =  new { Id = clientId };
+            return CreatedAtAction(nameof(GetById), new { id = clientId }, result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ClientDTO client)
         {
-            var result = await clientService.Update(client);
+            var result = await _clientService.Update(client);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return Ok(result);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromQuery] int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await clientService.Delete(id);
-            return Ok(result);
+            var result = await _clientService.Delete(id);
+            
+            if (!result)
+            {
+                return NotFound();
+            }
+            
+            return NoContent();
         }
     }
 }

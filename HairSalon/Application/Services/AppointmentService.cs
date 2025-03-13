@@ -12,45 +12,50 @@ namespace Application.Services
 {
     public class AppointmentService : IAppointmentService
     {
-        private IAppointmentRepository appointmentRepository;
-        private IMapper mapper;
+        private readonly IAppointmentRepository _appointmentRepository;
+        private IMapper _mapper;
+
         public AppointmentService (IAppointmentRepository appointmentRepository, IMapper mapper)
         {
-            this.appointmentRepository = appointmentRepository;
-            this.mapper = mapper;
+            this._appointmentRepository = appointmentRepository;
+            this._mapper = mapper;
         }
-        public async Task Add(AppointmentDTO appointment)
+
+        public async Task<int> Add(AppointmentDTO appointment)
         {
-            var mappedAppointment = mapper.Map<Appointment>(appointment);
+            var mappedAppointment = _mapper.Map<Appointment>(appointment);
             if (mappedAppointment != null)
             {
-                await appointmentRepository.Create(mappedAppointment);
+                await _appointmentRepository.Create(mappedAppointment);
+                return mappedAppointment.Id;
             }
+
+            throw new ArgumentException("Failed to map AppointmentDTO to Appointment"); //Или return -1;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await appointmentRepository.Delete(id);
+            return await _appointmentRepository.Delete(id);
         }
 
-        public async Task<List<AppointmentDTO>> GetAll()
+        public async Task<IEnumerable<AppointmentDTO>> GetAll()
         {
-            var appointments = await appointmentRepository.ReadAll();
-            var mappedAppointments = appointments.Select(q => mapper.Map<AppointmentDTO>(q)).ToList();
+            var appointments = await _appointmentRepository.ReadAll();
+            var mappedAppointments = appointments.Select(q => _mapper.Map<AppointmentDTO>(q)).ToList();
             return mappedAppointments;
         }
 
         public async Task<AppointmentDTO?> GetById(int id)
         {
-            var appointment = await appointmentRepository.ReadById(id);
-            var mappedAppointment = mapper.Map<AppointmentDTO>(appointment);
+            var appointment = await _appointmentRepository.ReadById(id);
+            var mappedAppointment = _mapper.Map<AppointmentDTO>(appointment);
             return mappedAppointment;
         }
 
         public async Task<bool> Update(AppointmentDTO appointment)
         {
-            var mappedAppointment = mapper.Map<Appointment>(appointment);
-            return await appointmentRepository.Update(mappedAppointment);
+            var mappedAppointment = _mapper.Map<Appointment>(appointment);
+            return await _appointmentRepository.Update(mappedAppointment);
         }
     }
 }

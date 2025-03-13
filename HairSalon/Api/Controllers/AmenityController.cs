@@ -1,57 +1,58 @@
 ﻿using Application.DTOs;
 using Application.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EmployeeController : ControllerBase
+    public class AmenityController : ControllerBase
     {
-        private IEmployeeService _employeeService;
+        private IAmenityService _amenityService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public AmenityController(IAmenityService amenityService)
         {
-            this._employeeService = employeeService;
+            this._amenityService = amenityService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var employee = await _employeeService.GetById(id);
+            var amenity = await _amenityService.GetById(id);
             
-            if (employee == null)
+            if (amenity == null)
             {
                 return NotFound();
             }
             
-            return Ok(employee);
+            return Ok(amenity);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var employees = await _employeeService.GetAll();
-            return Ok(employees);
+            var amenity = await _amenityService.GetAll();
+            return Ok(amenity);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] EmployeeDTO employee)
+        public async Task<IActionResult> Add([FromBody] AmenityDTO amenity)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState); // Возвращает 400 Bad Request с информацией об ошибках валидации
             }
 
-            var employeeId = await _employeeService.Add(employee);
-            var result = new { Id = employeeId };
-            return CreatedAtAction(nameof(GetById), new { id = employeeId }, result);
+            var amenityId = await _amenityService.Add(amenity);
+            var result = new { Id = amenityId };
+            return CreatedAtAction(nameof(GetById), new { id = amenityId }, result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] EmployeeDTO employee)
+        public async Task<IActionResult> Update([FromBody] AmenityDTO amenity)
         {
-            var result = await _employeeService.Update(employee);
+            var result = await _amenityService.Update(amenity);
 
             if (!result)
             {
@@ -64,9 +65,9 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _employeeService.Delete(id);
+            var result = await _amenityService.Delete(id);
             
-            if (!result)
+            if(!result)
             {
                 return NotFound();
             }

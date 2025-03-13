@@ -16,7 +16,7 @@ namespace Application.Mappings
             CreateMap<Appointment, AppointmentDTO>().ReverseMap();
             CreateMap<Client, ClientDTO>().ReverseMap();
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
-            CreateMap<Service, ServiceDTO>().ReverseMap();
+            CreateMap<Amenity, AmenityDTO>().ReverseMap();
         }
     }
 }
