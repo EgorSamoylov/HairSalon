@@ -12,7 +12,7 @@ namespace Api.Controllers
 
         public EmployeeController(IEmployeeService employeeService)
         {
-            this._employeeService = employeeService;
+            _employeeService = employeeService;
         }
 
         [HttpGet("{id}")]

@@ -17,8 +17,8 @@ namespace Application.Services
 
         public AmenityService (IAmenityRepository amenityRepository, IMapper mapper)
         {
-            this._amenityRepository = amenityRepository;
-            this._mapper = mapper;
+            _amenityRepository = amenityRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Add(AmenityDTO amenity)

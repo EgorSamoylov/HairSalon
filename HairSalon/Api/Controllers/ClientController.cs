@@ -13,7 +13,7 @@ namespace Api.Controllers
 
         public ClientController(IClientService clientService)
         {
-            this._clientService = clientService;
+            _clientService = clientService;
         }
 
         [HttpGet("{id}")]

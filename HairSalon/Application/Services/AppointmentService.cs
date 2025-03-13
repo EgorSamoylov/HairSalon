@@ -17,8 +17,8 @@ namespace Application.Services
 
         public AppointmentService (IAppointmentRepository appointmentRepository, IMapper mapper)
         {
-            this._appointmentRepository = appointmentRepository;
-            this._mapper = mapper;
+            _appointmentRepository = appointmentRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Add(AppointmentDTO appointment)

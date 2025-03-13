@@ -13,7 +13,7 @@ namespace Api.Controllers
 
         public AmenityController(IAmenityService amenityService)
         {
-            this._amenityService = amenityService;
+            _amenityService = amenityService;
         }
 
         [HttpGet("{id}")]

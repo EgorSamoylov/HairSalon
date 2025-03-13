@@ -17,8 +17,8 @@ namespace Application.Services
 
         public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
         {
-            this._employeeRepository = employeeRepository;
-            this._mapper = mapper;
+            _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Add(EmployeeDTO employee)

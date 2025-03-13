@@ -17,8 +17,8 @@ namespace Application.Services
 
         public  ClientService(IClientRepository clientRepository, IMapper mapper)
         {
-            this._clientRepository = clientRepository;
-            this._mapper = mapper;
+            _clientRepository = clientRepository;
+            _mapper = mapper;
         }
 
         public async Task<int> Add(ClientDTO client)

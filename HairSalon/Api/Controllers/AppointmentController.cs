@@ -12,7 +12,7 @@ namespace Api.Controllers
 
         public AppointmentController(IAppointmentService employeeService)
         {
-            this._appointmentService = employeeService;
+            _appointmentService = employeeService;
         }
 
         [HttpGet("{id}")]
