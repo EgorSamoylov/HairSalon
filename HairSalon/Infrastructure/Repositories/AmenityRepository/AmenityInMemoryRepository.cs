@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.AmenityRepository
 {
-    public class AmenityRepository : IAmenityRepository
+    public class AmenityInMemoryRepository : IAmenityRepository
     {
         private List<Amenity> _amenities = new List<Amenity>();
 
-        public AmenityRepository() { }
+        public AmenityInMemoryRepository() { }
 
         public Task Create(Amenity amenity)
         {

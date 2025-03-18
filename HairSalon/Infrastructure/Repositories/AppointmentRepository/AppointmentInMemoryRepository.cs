@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.AppointmentRepository
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentInMemoryRepository : IAppointmentRepository
     {
         private List<Appointment> _appointments = new List<Appointment>();
 
-        public AppointmentRepository() { }
+        public AppointmentInMemoryRepository() { }
 
         public Task Create(Appointment appointment)
         {

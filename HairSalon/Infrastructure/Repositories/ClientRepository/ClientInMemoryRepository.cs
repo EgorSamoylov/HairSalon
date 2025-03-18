@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.ClientRepository
 {
-    public class ClientRepository : IClientRepository
+    public class ClientInMemoryRepository : IClientRepository
     {
         private List<Client> _clients = new List<Client>();
 
-        public ClientRepository() { }
+        public ClientInMemoryRepository() { }
 
         public Task Create(Client client)
         {

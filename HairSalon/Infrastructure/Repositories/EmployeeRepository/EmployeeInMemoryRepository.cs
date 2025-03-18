@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.EmployeeRepository
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeInMemoryRepository : IEmployeeRepository
     {
         private List<Employee> _employees = new List<Employee>();
 
-        public EmployeeRepository() { }
+        public EmployeeInMemoryRepository() { }
 
         public Task Create(Employee employee)
         {

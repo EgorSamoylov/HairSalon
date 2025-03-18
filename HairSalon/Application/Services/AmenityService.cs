@@ -1,7 +1,7 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Repositories;
+using Infrastructure.Repositories.AmenityRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
