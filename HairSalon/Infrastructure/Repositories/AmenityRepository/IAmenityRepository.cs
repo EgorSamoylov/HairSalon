@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories.AmenityRepository
     {
         public Task<Amenity?> ReadById(int id);
         public Task<List<Amenity>> ReadAll();
-        public Task Create(Amenity service);
+        public Task<int> Create(Amenity service);
         public Task<bool> Update(Amenity service);
         public Task<bool> Delete(int id);
     }

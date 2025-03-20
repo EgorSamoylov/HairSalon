@@ -13,36 +13,95 @@ namespace Infrastructure.Repositories.AmenityRepository
     {
         private readonly NpgsqlConnection _connection;
 
-        // ToDo написать для своих классов
-
         public AmentyPostgresRepository(NpgsqlConnection connection)
         {
             _connection = connection;
         }
 
-        public Task<Amenity?> ReadById(int id)
+        public async Task<Amenity?> ReadById(int id)
         {
-            throw new NotImplementedException();
+            await _connection.OpenAsync();
+
+            var amenity = await _connection.QueryFirstOrDefaultAsync<Amenity>(
+                @"SELECT 
+                    id, 
+                    service_name, 
+                    description
+                    author_id
+                    price
+                    duration_minutes
+                FROM amenities
+                WHERE Id = @id", new { Id = id });
+
+            await _connection.CloseAsync();
+
+            return amenity;
         }
 
-        public Task<List<Amenity>> ReadAll()
+        public async Task<List<Amenity>> ReadAll()
         {
-            throw new NotImplementedException();
+            await _connection.OpenAsync();
+
+            var amenities = await _connection.QueryAsync<Amenity>(
+                @"SELECT
+                    id, 
+                    service_name, 
+                    description
+                    author_id
+                    price
+                    duration_minutes
+                FROM amenities");
+
+            await _connection.CloseAsync();
+
+            return amenities.ToList();
         }
 
-        Task IAmenityRepository.Create(Amenity service)
+        public async Task<int> Create(Amenity amenity)
         {
-            throw new NotImplementedException();
+            await _connection.OpenAsync();
+
+            var amenityId = await _connection.QuerySingleAsync<int>(
+                @"INSERT INTO  amenities (service_name, description, author_id, price, duration_minutes)
+                VALUES (@ServiceName, @Description, @AuthorId, @Price, @DurationMinutes)
+                RETURNING id",
+                new { amenity.ServiceName, amenity.Description, amenity.AuthorId, amenity.Price, amentiy.DurationMinutes });
+
+            await _connection.CloseAsync();
+
+            return amenityId;
         }
 
-        public Task<bool> Update(Amenity service)
+        public async Task<bool> Update(Amenity amenity)
         {
-            throw new NotImplementedException();
+            await _connection.OpenAsync();
+
+            var AffectedRows = await _connection.ExecuteAsync(
+                @"UPDATE amenities
+                    SET service_name = @ServiceName,
+                        description = @Description,
+                        author_Id = @AuthorId,
+                        price = @Price,
+                        duration_minutes = @DurationMinutes
+                    WHERE Id = @id",
+                amenity);
+
+            await _connection.CloseAsync();
+
+            return AffectedRows > 0;
         }
 
         public Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            await _connection.OpenAsync();
+
+            var affectRows = await _connection.ExecuteAsync(
+                @"DELETE FROM amenities WHERE @Id = id",
+                new { Id = id });
+
+            await _connection.CloseAsync();
+
+            return affectRows > 0;
         }
     }
 }

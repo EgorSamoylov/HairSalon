@@ -39,7 +39,7 @@ namespace Infrastructure.Database.Migrations
             Create.Table("appointments")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("client_id").AsInt32().NotNullable().ForeignKey("clients", "id")
-                .WithColumn("empployee_id").AsInt32().NotNullable().ForeignKey("employees", "id")
+                .WithColumn("employee_id").AsInt32().NotNullable().ForeignKey("employees", "id")
                 .WithColumn("amenity_id").AsInt32().NotNullable().ForeignKey("amenities", "id")
                 .WithColumn("appointment_datetime").AsDateTime().NotNullable()
                 .WithColumn("notes").AsInt32().Nullable();
