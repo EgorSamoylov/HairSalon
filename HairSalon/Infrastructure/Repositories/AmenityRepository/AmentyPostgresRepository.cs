@@ -20,63 +20,49 @@ namespace Infrastructure.Repositories.AmenityRepository
 
         public async Task<Amenity?> ReadById(int id)
         {
-            await _connection.OpenAsync();
-
             var amenity = await _connection.QueryFirstOrDefaultAsync<Amenity>(
                 @"SELECT 
                     id, 
                     service_name, 
-                    description
-                    author_id
-                    price
+                    description,
+                    author_id,
+                    price,
                     duration_minutes
                 FROM amenities
                 WHERE Id = @id", new { Id = id });
-
-            await _connection.CloseAsync();
 
             return amenity;
         }
 
         public async Task<List<Amenity>> ReadAll()
         {
-            await _connection.OpenAsync();
-
             var amenities = await _connection.QueryAsync<Amenity>(
                 @"SELECT
                     id, 
                     service_name, 
-                    description
-                    author_id
-                    price
+                    description,
+                    author_id,
+                    price,
                     duration_minutes
                 FROM amenities");
-
-            await _connection.CloseAsync();
 
             return amenities.ToList();
         }
 
         public async Task<int> Create(Amenity amenity)
         {
-            await _connection.OpenAsync();
-
             var amenityId = await _connection.QuerySingleAsync<int>(
                 @"INSERT INTO  amenities (service_name, description, author_id, price, duration_minutes)
                 VALUES (@ServiceName, @Description, @AuthorId, @Price, @DurationMinutes)
                 RETURNING id",
-                new { amenity.ServiceName, amenity.Description, amenity.AuthorId, amenity.Price, amentiy.DurationMinutes });
-
-            await _connection.CloseAsync();
+                new { amenity.ServiceName, amenity.Description, amenity.AuthorId, amenity.Price, amenity.DurationMinutes });
 
             return amenityId;
         }
 
         public async Task<bool> Update(Amenity amenity)
         {
-            await _connection.OpenAsync();
-
-            var AffectedRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"UPDATE amenities
                     SET service_name = @ServiceName,
                         description = @Description,
@@ -86,12 +72,10 @@ namespace Infrastructure.Repositories.AmenityRepository
                     WHERE Id = @id",
                 amenity);
 
-            await _connection.CloseAsync();
-
-            return AffectedRows > 0;
+            return affectedRows > 0;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             await _connection.OpenAsync();
 

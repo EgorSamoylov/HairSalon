@@ -13,10 +13,10 @@ namespace Infrastructure.Repositories.AppointmentRepository
 
         public AppointmentInMemoryRepository() { }
 
-        public Task Create(Appointment appointment)
+        public Task<int> Create(Appointment appointment)
         {
             _appointments.Add(appointment);
-            return Task.CompletedTask;
+            return Task.FromResult(appointment.Id);
         }
 
         public Task<bool> Delete(int id)

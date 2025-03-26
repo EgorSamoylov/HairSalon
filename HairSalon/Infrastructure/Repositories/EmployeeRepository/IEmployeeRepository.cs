@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories.EmployeeRepository
     {
         public Task<Employee?> ReadById(int id);
         public Task<List<Employee>> ReadAll();
-        public Task Create(Employee employee);
+        public Task<int> Create(Employee employee);
         public Task<bool> Update(Employee employee);
         public Task<bool> Delete(int id);
     }

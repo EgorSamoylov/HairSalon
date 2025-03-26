@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories.AppointmentRepository
     {
         public Task<Appointment?> ReadById(int id);
         public Task<List<Appointment>> ReadAll();
-        public Task Create(Appointment appointment);
+        public Task<int> Create(Appointment appointment);
         public Task<bool> Update(Appointment appointment);
         public Task<bool> Delete(int id);
     }

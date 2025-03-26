@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories.ClientRepository
     {
         public Task<Client?> ReadById(int id);
         public Task<List<Client>> ReadAll();
-        public Task Create(Client client);
+        public Task<int> Create(Client client);
         public Task<bool> Update(Client client);
         public Task<bool> Delete(int id);
     }

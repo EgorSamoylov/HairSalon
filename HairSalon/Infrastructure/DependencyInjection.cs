@@ -47,12 +47,6 @@ namespace Infrastructure
             services.AddScoped<Database.MigrationRunner>(); // наш мигратор
 
             return services;
-
-            //services.AddSingleton<IAppointmentRepository, AppointmentInMemoryRepository>();
-            //services.AddSingleton<IEmployeeRepository, EmployeeInMemoryRepository>();
-            //services.AddSingleton<IClientRepository, ClientInMemoryRepository>();
-            //services.AddSingleton<IAmenityRepository, AmenityInMemoryRepository>();
-            //return services;
         }
     }
 }

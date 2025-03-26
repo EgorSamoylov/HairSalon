@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Migrations
 {
-    [Migration(202503181541)] // дата (год-месяц-день-час-минута)
+    [Migration(202503181541)]
     public class InitialMigration : Migration
     {
         public override void Up()

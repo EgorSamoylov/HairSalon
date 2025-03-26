@@ -18,38 +18,28 @@ namespace Infrastructure.Repositories.ClientRepository
             _connection = connection;
         }
 
-        public Task Create(Client client)
+        public async Task<int> Create(Client client)
         {
-            await _connection.OpenAsync();
-
             var clientId = await _connection.QuerySingleAsync<int>(
                 @"INSERT INTO  clients (first_name, last_name, phone_number, email, note)
                 VALUES (@FirstName, @LastName, @PhoneNumber, @Email, @Note)
                 RETURNING id",
                 new { client.FirstName, client.LastName, client.PhoneNumber, client.Email, client.Note });
 
-            await _connection.CloseAsync();
-
             return clientId;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            await _connection.OpenAsync();
-
             var affectRows = await _connection.ExecuteAsync(
                 @"DELETE FROM clients WHERE @Id = id",
                 new { Id = id });
 
-            await _connection.CloseAsync();
-
             return affectRows > 0;
         }
 
-        public Task<List<Client>> ReadAll()
+        public async Task<List<Client>> ReadAll()
         {
-            await _connection.OpenAsync();
-
             var clients = await _connection.QueryAsync<Client>(
                 @"SELECT 
                     id, 
@@ -60,15 +50,11 @@ namespace Infrastructure.Repositories.ClientRepository
                     note
                 FROM clients");
 
-            await _connection.CloseAsync();
-
             return clients.ToList();
         }
 
-        public Task<Client?> ReadById(int id)
+        public async Task<Client?> ReadById(int id)
         {
-            await _connection.OpenAsync();
-
             var client = await _connection.QueryFirstOrDefaultAsync<Client>(
                 @"SELECT 
                     id, 
@@ -80,16 +66,12 @@ namespace Infrastructure.Repositories.ClientRepository
                 FROM clients
                 WHERE Id = @id", new { Id = id });
 
-            await _connection.CloseAsync();
-
             return client;
         }
 
-        public Task<bool> Update(Client client)
+        public async Task<bool> Update(Client client)
         {
-            await _connection.OpenAsync();
-
-            var AffectedRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"UPDATE clients
                     SET first_name = @FirstName,
                         last_name = @LastName,
@@ -99,9 +81,7 @@ namespace Infrastructure.Repositories.ClientRepository
                     WHERE Id = @id",
                 client);
 
-            await _connection.CloseAsync();
-
-            return AffectedRows > 0;
+            return affectedRows > 0;
         }
     }
 }

@@ -13,10 +13,10 @@ namespace Infrastructure.Repositories.ClientRepository
 
         public ClientInMemoryRepository() { }
 
-        public Task Create(Client client)
+        public Task<int> Create(Client client)
         {
             _clients.Add(client);
-            return Task.CompletedTask;
+            return Task.FromResult(client.Id);
         }
 
         public Task<bool> Delete(int id)

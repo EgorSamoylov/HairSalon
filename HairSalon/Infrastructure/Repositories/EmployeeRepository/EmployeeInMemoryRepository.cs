@@ -13,10 +13,10 @@ namespace Infrastructure.Repositories.EmployeeRepository
 
         public EmployeeInMemoryRepository() { }
 
-        public Task Create(Employee employee)
+        public Task<int> Create(Employee employee)
         {
             _employees.Add(employee);
-            return Task.CompletedTask;
+            return Task.FromResult(employee.Id);
         }
 
         public Task<bool> Delete(int id)

@@ -18,38 +18,28 @@ namespace Infrastructure.Repositories.EmployeeRepository
             _connection = connection;
         }
 
-        public Task Create(Employee employee)
+        public async Task<int> Create(Employee employee)
         {
-            await _connection.OpenAsync();
-
             var employeeId = await _connection.QuerySingleAsync<int>(
                 @"INSERT INTO  employees (first_name, last_name, phone_number, email, position)
                 VALUES (@FirstName, @LastName, @PhoneNumber, @email, @Position)
                 RETURNING id",
-                new { employee.FirstName, employee.LastName, employee.PhoneNumber, employee.email, employee.Position });
-
-            await _connection.CloseAsync();
+                new { employee.FirstName, employee.LastName, employee.PhoneNumber, employee.Email, employee.Position });
 
             return employeeId;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            await _connection.OpenAsync();
-
             var affectRows = await _connection.ExecuteAsync(
                 @"DELETE FROM employees WHERE @Id = id",
                 new { Id = id });
 
-            await _connection.CloseAsync();
-
             return affectRows > 0;
         }
 
-        public Task<List<Employee>> ReadAll()
+        public async Task<List<Employee>> ReadAll()
         {
-            await _connection.OpenAsync();
-
             var employees = await _connection.QueryAsync<Employee>(
                 @"SELECT 
                     id, 
@@ -60,15 +50,11 @@ namespace Infrastructure.Repositories.EmployeeRepository
                     position
                 FROM employees");
 
-            await _connection.CloseAsync();
-
             return employees.ToList();
         }
 
-        public Task<Employee?> ReadById(int id)
+        public async Task<Employee?> ReadById(int id)
         {
-            await _connection.OpenAsync();
-
             var employee = await _connection.QueryFirstOrDefaultAsync<Employee>(
                 @"SELECT 
                     id, 
@@ -80,16 +66,12 @@ namespace Infrastructure.Repositories.EmployeeRepository
                 FROM employees
                 WHERE Id = @id", new { Id = id });
 
-            await _connection.CloseAsync();
-
             return employee;
         }
 
-        public Task<bool> Update(Employee employee)
+        public async Task<bool> Update(Employee employee)
         {
-            await _connection.OpenAsync();
-
-            var AffectedRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"UPDATE employees
                     SET first_name = @FirstName,
                         last_name = @LastName,
@@ -99,9 +81,7 @@ namespace Infrastructure.Repositories.EmployeeRepository
                     WHERE Id = @id",
                 employee);
 
-            await _connection.CloseAsync();
-
-            return AffectedRows > 0;
+            return affectedRows > 0;
         }
     }
 }
