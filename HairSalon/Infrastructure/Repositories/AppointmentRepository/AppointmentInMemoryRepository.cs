@@ -5,18 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.AppointmentRepository
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentInMemoryRepository : IAppointmentRepository
     {
         private List<Appointment> _appointments = new List<Appointment>();
 
-        public AppointmentRepository() { }
+        public AppointmentInMemoryRepository() { }
 
-        public Task Create(Appointment appointment)
+        public Task<int> Create(Appointment appointment)
         {
             _appointments.Add(appointment);
-            return Task.CompletedTask;
+            return Task.FromResult(appointment.Id);
         }
 
         public Task<bool> Delete(int id)

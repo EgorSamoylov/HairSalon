@@ -5,18 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.EmployeeRepository
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeInMemoryRepository : IEmployeeRepository
     {
         private List<Employee> _employees = new List<Employee>();
 
-        public EmployeeRepository() { }
+        public EmployeeInMemoryRepository() { }
 
-        public Task Create(Employee employee)
+        public Task<int> Create(Employee employee)
         {
             _employees.Add(employee);
-            return Task.CompletedTask;
+            return Task.FromResult(employee.Id);
         }
 
         public Task<bool> Delete(int id)

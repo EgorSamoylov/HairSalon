@@ -5,18 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories.AmenityRepository
 {
-    public class AmenityRepository : IAmenityRepository
+    public class AmenityInMemoryRepository : IAmenityRepository
     {
         private List<Amenity> _amenities = new List<Amenity>();
 
-        public AmenityRepository() { }
+        public AmenityInMemoryRepository() { }
 
-        public Task Create(Amenity amenity)
+        public Task<int> Create(Amenity amenity)
         {
             _amenities.Add(amenity);
-            return Task.CompletedTask;
+            return Task.FromResult(amenity.Id);
         }
 
         public Task<bool> Delete(int id)
