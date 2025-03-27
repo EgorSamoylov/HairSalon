@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories.AppointmentRepository
         public async Task<int> Create(Appointment appointment)
         {
             var appointmentId = await _connection.QuerySingleAsync<int>(
-                @"INSERT INTO  appointments (client_id, empployee_id, amenity_id, appointment_datetime, notes)
+                @"INSERT INTO  appointments (client_id, employee_id, amenity_id, appointment_datetime, notes)
                 VALUES (@ClientId, @EmployeeId, @AmenityId, @AppointmentDatetime, @Notes)
                 RETURNING id",
                 new { appointment.ClientId, appointment.EmployeeId, appointment.ServiceId, appointment.AppointmentDateTime, appointment.Notes });
@@ -31,11 +31,11 @@ namespace Infrastructure.Repositories.AppointmentRepository
 
         public async Task<bool> Delete(int id)
         {
-            var affectRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"DELETE FROM appointments WHERE @Id = id",
                 new { Id = id });
 
-            return affectRows > 0;
+            return affectedRows > 0;
         }
 
         public async Task<List<Appointment>> ReadAll()

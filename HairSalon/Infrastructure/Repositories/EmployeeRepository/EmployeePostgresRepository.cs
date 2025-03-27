@@ -31,11 +31,11 @@ namespace Infrastructure.Repositories.EmployeeRepository
 
         public async Task<bool> Delete(int id)
         {
-            var affectRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"DELETE FROM employees WHERE @Id = id",
                 new { Id = id });
 
-            return affectRows > 0;
+            return affectedRows > 0;
         }
 
         public async Task<List<Employee>> ReadAll()

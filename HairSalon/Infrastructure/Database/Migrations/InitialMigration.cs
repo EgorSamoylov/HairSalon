@@ -42,7 +42,7 @@ namespace Infrastructure.Database.Migrations
                 .WithColumn("employee_id").AsInt32().NotNullable().ForeignKey("employees", "id")
                 .WithColumn("amenity_id").AsInt32().NotNullable().ForeignKey("amenities", "id")
                 .WithColumn("appointment_datetime").AsDateTime().NotNullable()
-                .WithColumn("notes").AsInt32().Nullable();
+                .WithColumn("notes").AsString(255).Nullable();
 
             Insert.IntoTable("employees")
                 .Row(new
@@ -78,7 +78,7 @@ namespace Infrastructure.Database.Migrations
                 .Row(new
                 {
                     client_id = 1,
-                    empployee_id = 1,
+                    employee_id = 1,
                     amenity_id = 1,
                     appointment_datetime = DateTime.Now,
                     notes = "Клиент просит, чтобы подравняли виски и задушевно поговорили"

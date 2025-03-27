@@ -9,11 +9,11 @@ using Dapper;
 
 namespace Infrastructure.Repositories.AmenityRepository
 {
-    public class AmentyPostgresRepository : IAmenityRepository
+    public class AmenityPostgresRepository : IAmenityRepository
     {
         private readonly NpgsqlConnection _connection;
 
-        public AmentyPostgresRepository(NpgsqlConnection connection)
+        public AmenityPostgresRepository(NpgsqlConnection connection)
         {
             _connection = connection;
         }
@@ -77,15 +77,11 @@ namespace Infrastructure.Repositories.AmenityRepository
 
         public async Task<bool> Delete(int id)
         {
-            await _connection.OpenAsync();
-
-            var affectRows = await _connection.ExecuteAsync(
+            var affectedRows = await _connection.ExecuteAsync(
                 @"DELETE FROM amenities WHERE @Id = id",
                 new { Id = id });
 
-            await _connection.CloseAsync();
-
-            return affectRows > 0;
+            return affectedRows > 0;
         }
     }
 }

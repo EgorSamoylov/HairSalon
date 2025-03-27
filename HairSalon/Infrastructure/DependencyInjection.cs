@@ -35,7 +35,7 @@ namespace Infrastructure
             services.AddTransient<IAppointmentRepository, AppointmentPostgresRepository>();
             services.AddTransient<IEmployeeRepository, EmployeePostgresRepository>();
             services.AddTransient<IClientRepository, ClientPostgresRepository>();
-            services.AddTransient<IAmenityRepository, AmentyPostgresRepository>();
+            services.AddTransient<IAmenityRepository, AmenityPostgresRepository>();
 
             services.AddFluentMigratorCore()
                 .ConfigureRunner(
