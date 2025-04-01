@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories.AppointmentRepository
                     id, 
                     client_id AS clientId, 
                     employee_id AS employeeId,
-                    amenity_id AS amenityId,
+                    amenity_id AS serviceId,
                     appointment_datetime AS appointmentDateTime,
                     notes
                 FROM appointments");
@@ -60,7 +60,7 @@ namespace Infrastructure.Repositories.AppointmentRepository
                     id, 
                     client_id AS clientId, 
                     employee_id AS employeeId,
-                    amenity_id AS amenityId,
+                    amenity_id AS serviceId,
                     appointment_datetime AS appointmentDateTiem,
                     notes
                 FROM appointments
