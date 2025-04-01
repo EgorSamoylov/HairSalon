@@ -2,16 +2,7 @@
 using Application.Request.EmployeeRequest;
 using AutoMapper;
 using Domain.Entities;
-<<<<<<< HEAD
-using Infrastructure.Repositories;
-=======
 using Infrastructure.Repositories.EmployeeRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
->>>>>>> main
 
 namespace Application.Services
 {

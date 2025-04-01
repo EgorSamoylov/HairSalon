@@ -2,16 +2,7 @@
 using Application.Request.AppointmentRequest;
 using AutoMapper;
 using Domain.Entities;
-<<<<<<< HEAD
-using Infrastructure.Repositories;
-=======
 using Infrastructure.Repositories.AppointmentRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
->>>>>>> main
 
 namespace Application.Services
 {
