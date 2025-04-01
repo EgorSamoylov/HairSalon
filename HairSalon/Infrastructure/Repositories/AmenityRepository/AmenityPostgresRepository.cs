@@ -23,11 +23,11 @@ namespace Infrastructure.Repositories.AmenityRepository
             var amenity = await _connection.QueryFirstOrDefaultAsync<Amenity>(
                 @"SELECT 
                     id, 
-                    service_name, 
+                    service_name AS serviceName,
                     description,
-                    author_id,
-                    price,
-                    duration_minutes
+                    author_id AS authorId,
+                    price,  
+                    duration_minutes as durationMinutes
                 FROM amenities
                 WHERE Id = @id", new { Id = id });
 
@@ -39,11 +39,11 @@ namespace Infrastructure.Repositories.AmenityRepository
             var amenities = await _connection.QueryAsync<Amenity>(
                 @"SELECT
                     id, 
-                    service_name, 
+                    author_id AS authorId,
                     description,
-                    author_id,
+                    duration_minutes durationMinutes,
                     price,
-                    duration_minutes
+                    service_name serviceName
                 FROM amenities");
 
             return amenities.ToList();

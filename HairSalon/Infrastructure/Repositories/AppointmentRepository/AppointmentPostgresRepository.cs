@@ -43,10 +43,10 @@ namespace Infrastructure.Repositories.AppointmentRepository
             var appointments = await _connection.QueryAsync<Appointment>(
                 @"SELECT 
                     id, 
-                    client_id, 
-                    employee_id,
-                    amenity_id,
-                    appointment_datetime,
+                    client_id AS clientId, 
+                    employee_id AS employeeId,
+                    amenity_id AS amenityId,
+                    appointment_datetime AS appointmentDateTime,
                     notes
                 FROM appointments");
 
@@ -58,10 +58,10 @@ namespace Infrastructure.Repositories.AppointmentRepository
             var appointment = await _connection.QueryFirstOrDefaultAsync<Appointment>(
                 @"SELECT 
                     id, 
-                    client_id, 
-                    employee_id,
-                    amenity_id,
-                    appointment_datetime,
+                    client_id AS clientId, 
+                    employee_id AS employeeId,
+                    amenity_id AS amenityId,
+                    appointment_datetime AS appointmentDateTiem,
                     notes
                 FROM appointments
                 WHERE Id = @id", new { Id = id });

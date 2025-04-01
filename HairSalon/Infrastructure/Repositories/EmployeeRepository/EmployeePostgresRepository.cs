@@ -43,9 +43,9 @@ namespace Infrastructure.Repositories.EmployeeRepository
             var employees = await _connection.QueryAsync<Employee>(
                 @"SELECT 
                     id, 
-                    first_name, 
-                    last_name,
-                    phone_number,
+                    first_name AS firstName, 
+                    last_name AS lastName,
+                    phone_number AS phoneNumber,
                     email, 
                     position
                 FROM employees");
@@ -58,9 +58,9 @@ namespace Infrastructure.Repositories.EmployeeRepository
             var employee = await _connection.QueryFirstOrDefaultAsync<Employee>(
                 @"SELECT 
                     id, 
-                    first_name, 
-                    last_name,
-                    phone_number,
+                    first_name AS firstName, 
+                    last_name AS lastName,
+                    phone_number AS phoneNumber,
                     email, 
                     position
                 FROM employees

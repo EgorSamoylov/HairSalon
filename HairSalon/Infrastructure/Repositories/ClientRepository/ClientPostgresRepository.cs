@@ -43,9 +43,9 @@ namespace Infrastructure.Repositories.ClientRepository
             var clients = await _connection.QueryAsync<Client>(
                 @"SELECT 
                     id, 
-                    first_name, 
-                    last_name,
-                    phone_number,
+                    first_name AS firstName, 
+                    last_name AS lastName,
+                    phone_number AS phoneNumber,
                     email,
                     note
                 FROM clients");
@@ -58,9 +58,9 @@ namespace Infrastructure.Repositories.ClientRepository
             var client = await _connection.QueryFirstOrDefaultAsync<Client>(
                 @"SELECT 
                     id, 
-                    first_name, 
-                    last_name,
-                    phone_number,
+                    first_name AS firstName, 
+                    last_name AS lastName,
+                    phone_number AS phoneNumber,
                     email,
                     note
                 FROM clients
