@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Request.ClientRequest;
 using AutoMapper;
 using Domain.Entities;
@@ -39,6 +40,10 @@ namespace Application.Services
         public async Task<IEnumerable<ClientDTO>> GetAll()
         {
             var clients = await _clientRepository.ReadAll();
+            if (clients is null || clients.Count() == 0)
+            {
+                throw new NotFoundApplicationException("Clients not found");
+            }
             var mappedClient = clients.Select(q => _mapper.Map<ClientDTO>(q)).ToList();
             return mappedClient;
         }
@@ -46,6 +51,10 @@ namespace Application.Services
         public async Task<ClientDTO?> GetById(int id)
         {
             var client = await _clientRepository.ReadById(id);
+            if (client is null)
+            {
+                throw new NotFoundApplicationException("Client not found");
+            }
             var mappedClient = _mapper.Map<ClientDTO>(client);
             return mappedClient;
         }

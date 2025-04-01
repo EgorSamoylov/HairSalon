@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Request.AppointmentRequest;
 using AutoMapper;
 using Domain.Entities;
@@ -39,6 +40,10 @@ namespace Application.Services
         public async Task<IEnumerable<AppointmentDTO>> GetAll()
         {
             var appointments = await _appointmentRepository.ReadAll();
+            if (appointments is null || appointments.Count() == 0)
+            {
+                throw new NotFoundApplicationException("Appointments not found");
+            }
             var mappedAppointments = appointments.Select(q => _mapper.Map<AppointmentDTO>(q)).ToList();
             return mappedAppointments;
         }
@@ -46,6 +51,10 @@ namespace Application.Services
         public async Task<AppointmentDTO?> GetById(int id)
         {
             var appointment = await _appointmentRepository.ReadById(id);
+            if (appointment is null)
+            {
+                throw new NotFoundApplicationException("Appointment not found");
+            }
             var mappedAppointment = _mapper.Map<AppointmentDTO>(appointment);
             return mappedAppointment;
         }

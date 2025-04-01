@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Request.EmployeeRequest;
 using AutoMapper;
 using Domain.Entities;
@@ -39,6 +40,10 @@ namespace Application.Services
         public async Task<IEnumerable<EmployeeDTO>> GetAll()
         {
             var employees = await _employeeRepository.ReadAll();
+            if (employees is null || employees.Count() == 0)
+            {
+                throw new NotFoundApplicationException("Employees not found");
+            }
             var mappedEmployees = employees.Select(q => _mapper.Map<EmployeeDTO>(q)).ToList();
             return mappedEmployees;
         }
@@ -46,6 +51,10 @@ namespace Application.Services
         public async Task<EmployeeDTO?> GetById(int id)
         {
             var employee = await _employeeRepository.ReadById(id);
+            if (employee is null)
+            {
+                throw new NotFoundApplicationException("Employee not found");
+            }
             var mappedEmployee = _mapper.Map<EmployeeDTO>(employee);
             return mappedEmployee;
         }
