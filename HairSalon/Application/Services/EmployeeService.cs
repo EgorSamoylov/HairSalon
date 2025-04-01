@@ -1,12 +1,8 @@
 ﻿using Application.DTOs;
+using Application.Request.EmployeeRequest;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -21,16 +17,18 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<int> Add(EmployeeDTO employee)
+        public async Task Add(CreateEmployeeRequest request)
         {
-            var mappedEmployee = _mapper.Map<Employee>(employee);
-            if (employee != null)
+            var employee = new Employee()
             {
-                await _employeeRepository.Create(mappedEmployee);
-                return mappedEmployee.Id;
-            }
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                Position = request.Position
+            };
 
-            throw new ArgumentException("Failed to map EmployeeDTO to Employee"); //Или return -1;
+            await _employeeRepository.Create(employee);
         }
 
         public async Task<bool> Delete(int id)
@@ -52,10 +50,19 @@ namespace Application.Services
             return mappedEmployee;
         }
 
-        public async Task<bool> Update(EmployeeDTO employee)
+        public async Task<bool> Update(UpdateEmployeeRequest request)
         {
-            var mappedemploee = _mapper.Map<Employee>(employee);
-            return await _employeeRepository.Update(mappedemploee);
+            var employee = new Employee()
+            {
+                Id = request.EmployeeId,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                Position = request.Position
+            };
+
+            return await _employeeRepository.Update(employee);
         }
     }
 }

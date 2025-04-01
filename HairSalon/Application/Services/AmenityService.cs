@@ -1,12 +1,8 @@
 ﻿using Application.DTOs;
+using Application.Request.AmenityRequest;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -15,22 +11,24 @@ namespace Application.Services
         private readonly IAmenityRepository _amenityRepository;
         private IMapper _mapper;
 
-        public AmenityService (IAmenityRepository amenityRepository, IMapper mapper)
+        public AmenityService(IAmenityRepository amenityRepository, IMapper mapper)
         {
             _amenityRepository = amenityRepository;
             _mapper = mapper;
         }
 
-        public async Task<int> Add(AmenityDTO amenity)
+        public async Task Add(CreateAmenityRequest request)
         {
-            var mappedService = _mapper.Map<Amenity>(amenity);
-            if (mappedService != null)
+            var amenity = new Amenity()
             {
-                await _amenityRepository.Create(mappedService);
-                return mappedService.Id;
-            }
+                ServiceName = request.serviceName,
+                Description = request.Description,
+                AuthorId = request.AuthorId,
+                Price = request.Price,
+                DurationMinutes = request.DurationMinutes,
+            };
 
-            throw new ArgumentException("Failed to map AmenityDTO to Amenity"); //Или return -1;
+            await _amenityRepository.Create(amenity);
         }
 
         public async Task<bool> Delete(int id)
@@ -52,10 +50,18 @@ namespace Application.Services
             return mappedService;
         }
 
-        public async Task<bool> Update(AmenityDTO amenity)
+        public async Task<bool> Update(UpdateAmenityRequest request)
         {
-            var mappedService = _mapper.Map<Amenity>(amenity);
-            return await _amenityRepository.Update(mappedService);
+            var amenity = new Amenity()
+            {
+                ServiceName = request.serviceName,
+                Description = request.Description,
+                AuthorId = request.AuthorId,
+                Price = request.Price,
+                DurationMinutes = request.DurationMinutes,
+            };
+
+            return await _amenityRepository.Update(amenity);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.Request.EmployeeRequest;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +19,12 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var employee = await _employeeService.GetById(id);
-            
+
             if (employee == null)
             {
                 return NotFound();
             }
-            
+
             return Ok(employee);
         }
 
@@ -36,28 +36,16 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] EmployeeDTO employee)
+        public async Task<IActionResult> Add([FromBody] CreateEmployeeRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); // Возвращает 400 Bad Request с информацией об ошибках валидации
-            }
-
-            var employeeId = await _employeeService.Add(employee);
-            var result = new { Id = employeeId };
-            return CreatedAtAction(nameof(GetById), new { id = employeeId }, result);
+            await _employeeService.Add(request);
+            return Created();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] EmployeeDTO employee)
+        public async Task<IActionResult> Update([FromBody] UpdateEmployeeRequest request)
         {
-            var result = await _employeeService.Update(employee);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            var result = await _employeeService.Update(request);
             return Ok(result);
         }
 
@@ -65,12 +53,12 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _employeeService.Delete(id);
-            
+
             if (!result)
             {
                 return NotFound();
             }
-            
+
             return NoContent();
         }
     }

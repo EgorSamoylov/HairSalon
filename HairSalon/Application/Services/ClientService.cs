@@ -1,12 +1,8 @@
 ﻿using Application.DTOs;
+using Application.Request.ClientRequest;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -15,22 +11,24 @@ namespace Application.Services
         private readonly IClientRepository _clientRepository;
         private IMapper _mapper;
 
-        public  ClientService(IClientRepository clientRepository, IMapper mapper)
+        public ClientService(IClientRepository clientRepository, IMapper mapper)
         {
             _clientRepository = clientRepository;
             _mapper = mapper;
         }
 
-        public async Task<int> Add(ClientDTO client)
+        public async Task Add(CreateClientRequest request)
         {
-            var mappedClient = _mapper.Map<Client>(client);
-            if (mappedClient != null)
+            var client = new Client()
             {
-                await _clientRepository.Create(mappedClient);
-                return mappedClient.Id;
-            }
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                Note = request.Note
+            };
 
-            throw new ArgumentException("Failed to map ClientDTO to Client"); //Или return -1;
+            await _clientRepository.Create(client);
         }
 
         public async Task<bool> Delete(int id)
@@ -52,10 +50,18 @@ namespace Application.Services
             return mappedClient;
         }
 
-        public async Task<bool> Update(ClientDTO client)
+        public async Task<bool> Update(UpdateClientRequest request)
         {
-            var mappedClient = _mapper.Map<Client>(client);
-            return await _clientRepository.Update(mappedClient);
+            var client = new Client()
+            {
+                Id = request.ClientId,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                Note = request.Note
+            };
+            return await _clientRepository.Update(client);
         }
     }
 }

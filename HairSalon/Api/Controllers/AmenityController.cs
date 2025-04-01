@@ -1,7 +1,9 @@
 ﻿using Application.DTOs;
 using Application.Services;
 using Domain.Entities;
+using Application.Request;
 using Microsoft.AspNetCore.Mvc;
+using Application.Request.AmenityRequest;
 
 namespace Api.Controllers
 {
@@ -37,28 +39,16 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AmenityDTO amenity)
+        public async Task<IActionResult> Add([FromBody] CreateAmenityRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); // Возвращает 400 Bad Request с информацией об ошибках валидации
-            }
-
-            var amenityId = await _amenityService.Add(amenity);
-            var result = new { Id = amenityId };
-            return CreatedAtAction(nameof(GetById), new { id = amenityId }, result);
+            await _amenityService.Add(request);
+            return Created();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] AmenityDTO amenity)
+        public async Task<IActionResult> Update([FromBody] UpdateAmenityRequest request)
         {
-            var result = await _amenityService.Update(amenity);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            var result = await _amenityService.Update(request);
             return Ok(result);
         }
 

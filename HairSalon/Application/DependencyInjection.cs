@@ -1,11 +1,9 @@
 ﻿using Application.Mappings;
 using Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Application
 {
@@ -18,6 +16,12 @@ namespace Application
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IAmenityService, AmenityService>();
+
+            // для работы валидаторов
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
             return services;
         }
     }

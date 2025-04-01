@@ -1,5 +1,7 @@
 using Infrastructure;
 using Application;
+//using Infrastructure.Database;
+using Api.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +12,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 
 var app = builder.Build();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var migrationRunner = scope.ServiceProvider.GetRequiredService<MigrationRunner>();
+//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

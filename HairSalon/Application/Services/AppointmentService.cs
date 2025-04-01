@@ -1,12 +1,8 @@
 ﻿using Application.DTOs;
+using Application.Request.AppointmentRequest;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -15,22 +11,24 @@ namespace Application.Services
         private readonly IAppointmentRepository _appointmentRepository;
         private IMapper _mapper;
 
-        public AppointmentService (IAppointmentRepository appointmentRepository, IMapper mapper)
+        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper)
         {
             _appointmentRepository = appointmentRepository;
             _mapper = mapper;
         }
 
-        public async Task<int> Add(AppointmentDTO appointment)
+        public async Task Add(CreateAppointmentRequest request)
         {
-            var mappedAppointment = _mapper.Map<Appointment>(appointment);
-            if (mappedAppointment != null)
+            var appointment = new Appointment()
             {
-                await _appointmentRepository.Create(mappedAppointment);
-                return mappedAppointment.Id;
-            }
+                ClientId = request.ClientId,
+                EmployeeId = request.EmployeeId,
+                ServiceId = request.AmenityId,
+                AppointmentDateTime = request.AppointmentDateTime,
+                Notes = request.Notes
+            };
 
-            throw new ArgumentException("Failed to map AppointmentDTO to Appointment"); //Или return -1;
+            await _appointmentRepository.Create(appointment);
         }
 
         public async Task<bool> Delete(int id)
@@ -52,10 +50,18 @@ namespace Application.Services
             return mappedAppointment;
         }
 
-        public async Task<bool> Update(AppointmentDTO appointment)
+        public async Task<bool> Update(UpdateAppointmentRequest request)
         {
-            var mappedAppointment = _mapper.Map<Appointment>(appointment);
-            return await _appointmentRepository.Update(mappedAppointment);
+            var appointment = new Appointment()
+            {
+                Id = request.AppointmentId,
+                ClientId = request.ClientId,
+                EmployeeId = request.EmployeeId,
+                ServiceId = request.AmenityId,
+                AppointmentDateTime = request.AppointmentDateTime,
+                Notes = request.Notes
+            };
+            return await _appointmentRepository.Update(appointment);
         }
     }
 }

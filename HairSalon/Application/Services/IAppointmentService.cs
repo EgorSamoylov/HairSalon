@@ -1,10 +1,5 @@
 ﻿using Application.DTOs;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Request.AppointmentRequest;
 
 namespace Application.Services
 {
@@ -12,8 +7,8 @@ namespace Application.Services
     {
         public Task<AppointmentDTO?> GetById(int id);
         public Task<IEnumerable<AppointmentDTO>> GetAll();
-        public Task<int> Add(AppointmentDTO appointment);
-        public Task<bool> Update(AppointmentDTO appointment);
+        public Task Add(CreateAppointmentRequest appointment);
+        public Task<bool> Update(UpdateAppointmentRequest appointment);
         public Task<bool> Delete(int id);
     }
 }

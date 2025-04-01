@@ -1,10 +1,5 @@
 ﻿using Application.DTOs;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Request.EmployeeRequest;
 
 namespace Application.Services
 {
@@ -12,8 +7,8 @@ namespace Application.Services
     {
         public Task<EmployeeDTO?> GetById(int id);
         public Task<IEnumerable<EmployeeDTO>> GetAll();
-        public Task<int> Add(EmployeeDTO employee);
-        public Task<bool> Update(EmployeeDTO employee);
+        public Task Add(CreateEmployeeRequest employee);
+        public Task<bool> Update(UpdateEmployeeRequest employee);
         public Task<bool> Delete(int id);
     }
 }

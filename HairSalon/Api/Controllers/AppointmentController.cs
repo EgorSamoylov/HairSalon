@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Request.AppointmentRequest;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,28 +37,16 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AppointmentDTO appointment)
+        public async Task<IActionResult> Add([FromBody] CreateAppointmentRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); // Возвращает 400 Bad Request с информацией об ошибках валидации
-            }
-
-            var appointmentId = await _appointmentService.Add(appointment);
-            var result = new { Id = appointmentId };
-            return CreatedAtAction(nameof(GetById), new { id = appointmentId }, result);
+            await _appointmentService.Add(request);
+            return Created();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] AppointmentDTO appointment)
+        public async Task<IActionResult> Update([FromBody] UpdateAppointmentRequest request)
         {
-            var result = await _appointmentService.Update(appointment);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            var result = await _appointmentService.Update(request);
             return Ok(result);
         }
 
