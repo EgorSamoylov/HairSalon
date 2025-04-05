@@ -1,9 +1,6 @@
-﻿using Application.DTOs;
+﻿using Application.Request.AmenityRequest;
 using Application.Services;
-using Domain.Entities;
-using Application.Request;
 using Microsoft.AspNetCore.Mvc;
-using Application.Request.AmenityRequest;
 
 namespace Api.Controllers
 {
@@ -21,7 +18,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var amenity = await _amenityService.GetById(id);            
+            var amenity = await _amenityService.GetById(id);
             return Ok(amenity);
         }
 
@@ -51,12 +48,12 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _amenityService.Delete(id);
-            
-            if(!result)
+
+            if (!result)
             {
                 return NotFound();
             }
-            
+
             return NoContent();
         }
     }

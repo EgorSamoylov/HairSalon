@@ -5,8 +5,8 @@ namespace Application.Request.AmenityRequest
     public class UpdateAmenityRequest
     {
         public int AmenityId { get; set; }
-        public string ServiceName { get; set; }
-        public string Description { get; set; }
+        public required string ServiceName { get; set; }
+        public required string Description { get; set; }
         public int AuthorId { get; set; }
         public int Price { get; set; }
         public int DurationMinutes { get; set; }
