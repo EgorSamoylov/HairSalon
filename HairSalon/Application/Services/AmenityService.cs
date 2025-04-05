@@ -18,18 +18,18 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task Add(CreateAmenityRequest request)
+        public async Task<int> Add(CreateAmenityRequest request)
         {
             var amenity = new Amenity()
             {
-                ServiceName = request.serviceName,
+                ServiceName = request.ServiceName,
                 Description = request.Description,
                 AuthorId = request.AuthorId,
                 Price = request.Price,
                 DurationMinutes = request.DurationMinutes,
             };
 
-            await _amenityRepository.Create(amenity);
+            return await _amenityRepository.Create(amenity);
         }
 
         public async Task<bool> Delete(int id)
@@ -40,10 +40,6 @@ namespace Application.Services
         public async Task<IEnumerable<AmenityDTO>> GetAll()
         {
             var amenities = await _amenityRepository.ReadAll();
-            if (amenities is null || amenities.Count() == 0)
-            {
-                throw new NotFoundApplicationException("Amenities not found");
-            }
             var mappedServices = amenities.Select(q => _mapper.Map<AmenityDTO>(q)).ToList();
             return mappedServices;
         }
@@ -63,7 +59,7 @@ namespace Application.Services
         {
             var amenity = new Amenity()
             {
-                ServiceName = request.serviceName,
+                ServiceName = request.ServiceName,
                 Description = request.Description,
                 AuthorId = request.AuthorId,
                 Price = request.Price,

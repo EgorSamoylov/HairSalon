@@ -18,7 +18,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task Add(CreateAppointmentRequest request)
+        public async Task<int> Add(CreateAppointmentRequest request)
         {
             var appointment = new Appointment()
             {
@@ -29,7 +29,7 @@ namespace Application.Services
                 Notes = request.Notes
             };
 
-            await _appointmentRepository.Create(appointment);
+            return await _appointmentRepository.Create(appointment);
         }
 
         public async Task<bool> Delete(int id)
@@ -40,10 +40,6 @@ namespace Application.Services
         public async Task<IEnumerable<AppointmentDTO>> GetAll()
         {
             var appointments = await _appointmentRepository.ReadAll();
-            if (appointments is null || appointments.Count() == 0)
-            {
-                throw new NotFoundApplicationException("Appointments not found");
-            }
             var mappedAppointments = appointments.Select(q => _mapper.Map<AppointmentDTO>(q)).ToList();
             return mappedAppointments;
         }

@@ -27,7 +27,7 @@ namespace Application.Request.AppointmentRequest
             RuleFor(x => x.AmenityId).NotEmpty().GreaterThan(0).WithMessage("AmenityId must be positive")
                                                .LessThan(int.MaxValue).WithMessage("AmenityId is too long");
             RuleFor(x => x.AppointmentDateTime).NotEmpty().GreaterThan(DateTime.Now).WithMessage("AppointmentDateTime must be in the future");
-            RuleFor(x => x.Notes).MaximumLength(255);
+            RuleFor(x => x.Notes).MaximumLength(ValidationConstants.MaxNotesLength);
         }
     }
 }

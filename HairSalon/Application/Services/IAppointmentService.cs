@@ -7,7 +7,7 @@ namespace Application.Services
     {
         public Task<AppointmentDTO?> GetById(int id);
         public Task<IEnumerable<AppointmentDTO>> GetAll();
-        public Task Add(CreateAppointmentRequest appointment);
+        public Task<int> Add(CreateAppointmentRequest appointment);
         public Task<bool> Update(UpdateAppointmentRequest appointment);
         public Task<bool> Delete(int id);
     }

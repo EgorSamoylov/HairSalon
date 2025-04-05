@@ -18,7 +18,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task Add(CreateClientRequest request)
+        public async Task<int> Add(CreateClientRequest request)
         {
             var client = new Client()
             {
@@ -29,7 +29,7 @@ namespace Application.Services
                 Note = request.Note
             };
 
-            await _clientRepository.Create(client);
+            return await _clientRepository.Create(client);
         }
 
         public async Task<bool> Delete(int id)
@@ -40,10 +40,6 @@ namespace Application.Services
         public async Task<IEnumerable<ClientDTO>> GetAll()
         {
             var clients = await _clientRepository.ReadAll();
-            if (clients is null || clients.Count() == 0)
-            {
-                throw new NotFoundApplicationException("Clients not found");
-            }
             var mappedClient = clients.Select(q => _mapper.Map<ClientDTO>(q)).ToList();
             return mappedClient;
         }

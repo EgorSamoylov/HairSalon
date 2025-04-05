@@ -18,7 +18,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task Add(CreateEmployeeRequest request)
+        public async Task<int> Add(CreateEmployeeRequest request)
         {
             var employee = new Employee()
             {
@@ -29,7 +29,7 @@ namespace Application.Services
                 Position = request.Position
             };
 
-            await _employeeRepository.Create(employee);
+            return await _employeeRepository.Create(employee);
         }
 
         public async Task<bool> Delete(int id)
@@ -40,10 +40,6 @@ namespace Application.Services
         public async Task<IEnumerable<EmployeeDTO>> GetAll()
         {
             var employees = await _employeeRepository.ReadAll();
-            if (employees is null || employees.Count() == 0)
-            {
-                throw new NotFoundApplicationException("Employees not found");
-            }
             var mappedEmployees = employees.Select(q => _mapper.Map<EmployeeDTO>(q)).ToList();
             return mappedEmployees;
         }

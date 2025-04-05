@@ -7,7 +7,7 @@ namespace Application.Services
     {
         public Task<ClientDTO?> GetById(int id);
         public Task<IEnumerable<ClientDTO>> GetAll();
-        public Task Add(CreateClientRequest client);
+        public Task<int> Add(CreateClientRequest client);
         public Task<bool> Update(UpdateClientRequest client);
         public Task<bool> Delete(int id);
     }

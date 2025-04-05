@@ -22,11 +22,11 @@ namespace Application.Request.EmployeeRequest
         public UpdateEmployeeRequestValidator()
         {
             RuleFor(x => x.EmployeeId).NotEmpty().GreaterThan(0).WithMessage("EmployeeId must be positive");
-            RuleFor(x => x.FirstName).NotEmpty().MaximumLength(100).WithMessage("FirstName has 100 max length");
-            RuleFor(x => x.LastName).NotEmpty().MaximumLength(100).WithMessage("LastName has 100 max length");
-            RuleFor(x => x.PhoneNumber).NotEmpty().MaximumLength(24).WithMessage("PhoneNumber has 24 max length");
-            RuleFor(x => x.Email).NotEmpty().MaximumLength(100).WithMessage("Email has 100 max length");
-            RuleFor(x => x.Position).MaximumLength(255).WithMessage("Position has 255 max length");
+            RuleFor(x => x.FirstName).NotEmpty().MaximumLength(ValidationConstants.MaxFirstNameLength);
+            RuleFor(x => x.LastName).NotEmpty().MaximumLength(ValidationConstants.MaxLastNameLength);
+            RuleFor(x => x.PhoneNumber).NotEmpty().MaximumLength(ValidationConstants.MaxPhoneNumberLength);
+            RuleFor(x => x.Email).NotEmpty().MaximumLength(ValidationConstants.MaxEmailLength);
+            RuleFor(x => x.Position).MaximumLength(ValidationConstants.MaxPositionLength);
         }
     }
 }

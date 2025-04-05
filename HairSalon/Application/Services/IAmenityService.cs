@@ -7,7 +7,7 @@ namespace Application.Services
     {
         public Task<AmenityDTO?> GetById(int id);
         public Task<IEnumerable<AmenityDTO>> GetAll();
-        public Task Add(CreateAmenityRequest amenity);
+        public Task<int> Add(CreateAmenityRequest amenity);
         public Task<bool> Update(UpdateAmenityRequest amenity);
         public Task<bool> Delete(int id);
     }

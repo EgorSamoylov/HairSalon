@@ -1,5 +1,6 @@
 ﻿using Application.Request.ClientRequest;
 using Application.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,12 +20,6 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var client = await _clientService.GetById(id);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
             return Ok(client);
         }
 
@@ -38,8 +33,9 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateClientRequest request)
         {
-            await _clientService.Add(request);
-            return Created();
+            var clientId = await _clientService.Add(request);
+            var result = new { Id = clientId };
+            return CreatedAtAction(nameof(GetById), new { id = clientId }, result);
         }
 
         [HttpPut]

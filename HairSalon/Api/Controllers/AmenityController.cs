@@ -21,13 +21,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var amenity = await _amenityService.GetById(id);
-            
-            if (amenity == null)
-            {
-                return NotFound();
-            }
-            
+            var amenity = await _amenityService.GetById(id);            
             return Ok(amenity);
         }
 
@@ -41,8 +35,9 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateAmenityRequest request)
         {
-            await _amenityService.Add(request);
-            return Created();
+            var amenityId = await _amenityService.Add(request);
+            var result = new { Id = amenityId };
+            return CreatedAtAction(nameof(GetById), new { id = amenityId }, result);
         }
 
         [HttpPut]

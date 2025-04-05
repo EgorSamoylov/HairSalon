@@ -20,12 +20,6 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var appointment = await _appointmentService.GetById(id);
-            
-            if (appointment == null)
-            {
-                return NotFound();
-            }
-            
             return Ok(appointment);
         }
 
@@ -39,8 +33,9 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateAppointmentRequest request)
         {
-            await _appointmentService.Add(request);
-            return Created();
+            var appointmentId = await _appointmentService.Add(request);
+            var result = new { Id = appointmentId };
+            return CreatedAtAction(nameof(GetById), new { id = appointmentId }, result);
         }
 
         [HttpPut]

@@ -4,7 +4,7 @@ namespace Application.Request.AmenityRequest
 {
     public class CreateAmenityRequest
     {
-        public string serviceName { get; set; }
+        public string ServiceName { get; set; }
         public string Description { get; set; }
         public int AuthorId { get; set; }
         public int Price { get; set; }
@@ -15,8 +15,8 @@ namespace Application.Request.AmenityRequest
     {
         public CreateAmenityRequestValidator()
         {
-            RuleFor(x => x.serviceName).NotEmpty().MaximumLength(100).WithMessage("{PropertyName} has 100 max length");
-            RuleFor(x => x.Description).NotEmpty().MaximumLength(255);
+            RuleFor(x => x.ServiceName).NotEmpty().MaximumLength(ValidationConstants.MaxServiceNameLength);
+            RuleFor(x => x.Description).NotEmpty().MaximumLength(ValidationConstants.MaxDescriptionLength);
             RuleFor(x => x.AuthorId).NotEmpty().GreaterThan(0).WithMessage("AuthorId must be positive")
                                                .LessThan(int.MaxValue).WithMessage("AuthorId is too long");
             RuleFor(x => x.Price).NotEmpty().GreaterThan(0).WithMessage("Price must be positive")
