@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Request.AmenityRequest;
 using Application.Request.AppointmentRequest;
 
 namespace Application.Services
@@ -8,7 +9,7 @@ namespace Application.Services
         public Task<AppointmentDTO?> GetById(int id);
         public Task<IEnumerable<AppointmentDTO>> GetAll();
         public Task<int> Add(CreateAppointmentRequest appointment);
-        public Task<bool> Update(UpdateAppointmentRequest appointment);
-        public Task<bool> Delete(int id);
+        public Task Update(UpdateAppointmentRequest appointment);
+        public Task Delete(int id);
     }
 }

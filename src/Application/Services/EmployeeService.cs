@@ -32,9 +32,13 @@ namespace Application.Services
             return await _employeeRepository.Create(employee);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
-            return await _employeeRepository.Delete(id);
+            var result = await _employeeRepository.Delete(id);
+            if (!result)
+            {
+                throw new EntityDeleteException("Employee not found");
+            }
         }
 
         public async Task<IEnumerable<EmployeeDTO>> GetAll()
@@ -55,7 +59,7 @@ namespace Application.Services
             return mappedEmployee;
         }
 
-        public async Task<bool> Update(UpdateEmployeeRequest request)
+        public async Task Update(UpdateEmployeeRequest request)
         {
             var employee = new Employee()
             {
@@ -67,7 +71,11 @@ namespace Application.Services
                 Position = request.Position
             };
 
-            return await _employeeRepository.Update(employee);
+            var result = await _employeeRepository.Update(employee);
+            if (!result)
+            {
+                throw new EntityUpdateException("Employee wasn't updated");
+            }
         }
     }
 }

@@ -35,26 +35,20 @@ namespace Api.Controllers
         {
             var appointmentId = await _appointmentService.Add(request);
             var result = new { Id = appointmentId };
-            return CreatedAtAction(nameof(GetById), new { id = appointmentId }, result);
+            return CreatedAtAction(nameof(GetById), result, result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateAppointmentRequest request)
         {
-            var result = await _appointmentService.Update(request);
-            return Ok(result);
+            await _appointmentService.Update(request);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _appointmentService.Delete(id);
-
-            if (!result) 
-            {
-                return NotFound();
-            }
-
+            await _appointmentService.Delete(id);
             return NoContent();
         }
     }

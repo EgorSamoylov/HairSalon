@@ -8,7 +8,7 @@ namespace Application.Services
         public Task<EmployeeDTO?> GetById(int id);
         public Task<IEnumerable<EmployeeDTO>> GetAll();
         public Task<int> Add(CreateEmployeeRequest employee);
-        public Task<bool> Update(UpdateEmployeeRequest employee);
-        public Task<bool> Delete(int id);
+        public Task Update(UpdateEmployeeRequest employee);
+        public Task Delete(int id);
     }
 }

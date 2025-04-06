@@ -32,9 +32,13 @@ namespace Application.Services
             return await _appointmentRepository.Create(appointment);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
-            return await _appointmentRepository.Delete(id);
+            var result = await _appointmentRepository.Delete(id);
+            if (!result)
+            {
+                throw new EntityDeleteException("Appointment for deletion not found");
+            }
         }
 
         public async Task<IEnumerable<AppointmentDTO>> GetAll()
@@ -55,7 +59,7 @@ namespace Application.Services
             return mappedAppointment;
         }
 
-        public async Task<bool> Update(UpdateAppointmentRequest request)
+        public async Task Update(UpdateAppointmentRequest request)
         {
             var appointment = new Appointment()
             {
@@ -66,7 +70,11 @@ namespace Application.Services
                 AppointmentDateTime = request.AppointmentDateTime,
                 Notes = request.Notes
             };
-            return await _appointmentRepository.Update(appointment);
+            var result = await _appointmentRepository.Update(appointment);
+            if (!result)
+            {
+                throw new EntityUpdateException("Appointment wasn't updated");
+            }
         }
     }
 }

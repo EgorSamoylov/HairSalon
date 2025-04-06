@@ -32,9 +32,13 @@ namespace Application.Services
             return await _clientRepository.Create(client);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
-            return await _clientRepository.Delete(id);
+            var result = await _clientRepository.Delete(id);
+            if (!result)
+            {
+                throw new EntityDeleteException("Client for deletion not found");
+            }
         }
 
         public async Task<IEnumerable<ClientDTO>> GetAll()
@@ -55,7 +59,7 @@ namespace Application.Services
             return mappedClient;
         }
 
-        public async Task<bool> Update(UpdateClientRequest request)
+        public async Task Update(UpdateClientRequest request)
         {
             var client = new Client()
             {
@@ -66,7 +70,11 @@ namespace Application.Services
                 Email = request.Email,
                 Note = request.Note
             };
-            return await _clientRepository.Update(client);
+            var result = await _clientRepository.Update(client);
+            if (!result)
+            {
+                throw new EntityUpdateException("Client wasn't updated");
+            }
         }
     }
 }

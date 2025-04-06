@@ -27,7 +27,7 @@ namespace Infrastructure.Repositories.AmenityRepository
                     description,
                     author_id AS authorId,
                     price,  
-                    duration_minutes as durationMinutes
+                    duration_minutes AS durationMinutes
                 FROM amenities
                 WHERE Id = @id", new { Id = id });
 
@@ -41,9 +41,9 @@ namespace Infrastructure.Repositories.AmenityRepository
                     id, 
                     author_id AS authorId,
                     description,
-                    duration_minutes durationMinutes,
+                    duration_minutes AS durationMinutes,
                     price,
-                    service_name serviceName
+                    service_name AS serviceName
                 FROM amenities");
 
             return amenities.ToList();

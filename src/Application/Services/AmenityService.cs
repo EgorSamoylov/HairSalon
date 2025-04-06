@@ -32,9 +32,13 @@ namespace Application.Services
             return await _amenityRepository.Create(amenity);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
-            return await _amenityRepository.Delete(id);
+            var result = await _amenityRepository.Delete(id);
+            if (!result)
+            {
+                throw new EntityDeleteException("Amenity for deletion not found");
+            }
         }
 
         public async Task<IEnumerable<AmenityDTO>> GetAll()
@@ -55,7 +59,7 @@ namespace Application.Services
             return mappedService;
         }
 
-        public async Task<bool> Update(UpdateAmenityRequest request)
+        public async Task Update(UpdateAmenityRequest request)
         {
             var amenity = new Amenity()
             {
@@ -66,7 +70,11 @@ namespace Application.Services
                 DurationMinutes = request.DurationMinutes,
             };
 
-            return await _amenityRepository.Update(amenity);
+            var result = await _amenityRepository.Update(amenity);
+            if (!result)
+            {
+                throw new EntityUpdateException("Amenity wasn't updated");
+            }
         }
     }
 }
