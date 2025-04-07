@@ -41,7 +41,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateAmenityRequest request)
         {
             await _amenityService.Update(request);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

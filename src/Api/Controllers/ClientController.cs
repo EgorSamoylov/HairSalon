@@ -42,7 +42,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateClientRequest request)
         {
             await _clientService.Update(request);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

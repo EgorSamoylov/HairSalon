@@ -44,11 +44,11 @@ namespace Application.Services
         public async Task<IEnumerable<EmployeeDTO>> GetAll()
         {
             var employees = await _employeeRepository.ReadAll();
-            var mappedEmployees = employees.Select(q => _mapper.Map<EmployeeDTO>(q)).ToList();
+            var mappedEmployees = employees.Select(q => _mapper.Map<EmployeeDTO>(q));
             return mappedEmployees;
         }
 
-        public async Task<EmployeeDTO?> GetById(int id)
+        public async Task<EmployeeDTO> GetById(int id)
         {
             var employee = await _employeeRepository.ReadById(id);
             if (employee is null)

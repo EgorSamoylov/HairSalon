@@ -41,7 +41,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateEmployeeRequest request)
         {
             await _employeeService.Update(request);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

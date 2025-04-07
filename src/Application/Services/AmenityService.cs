@@ -44,11 +44,11 @@ namespace Application.Services
         public async Task<IEnumerable<AmenityDTO>> GetAll()
         {
             var amenities = await _amenityRepository.ReadAll();
-            var mappedServices = amenities.Select(q => _mapper.Map<AmenityDTO>(q)).ToList();
+            var mappedServices = amenities.Select(q => _mapper.Map<AmenityDTO>(q));
             return mappedServices;
         }
 
-        public async Task<AmenityDTO?> GetById(int id)
+        public async Task<AmenityDTO> GetById(int id)
         {
             var amenity = await _amenityRepository.ReadById(id);
             if (amenity is null)
