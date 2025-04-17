@@ -49,7 +49,7 @@ namespace ApplicaitonIntegrationTests
                             .AddPostgres()
                             .WithGlobalConnectionString(connectionString)
                             .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
-                        .Configure<SelectingProcessorAccessorOptions>(options => { options.ProcessorId = "Postgres"; });
+                        .Configure<SelectingProcessorAccessorOptions>(options => { options.ProcessorId = "PostgreSQL"; });
                 })
                 .Build();
 

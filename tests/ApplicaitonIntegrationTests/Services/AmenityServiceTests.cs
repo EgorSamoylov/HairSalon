@@ -1,8 +1,8 @@
 ﻿using Application.Exceptions;
 using Application.Request.AmenityRequest;
 using Application.Services;
-using Microsoft.Extensions.DependencyInjection;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ApplicaitonIntegrationTests.Services
 {
@@ -10,17 +10,22 @@ namespace ApplicaitonIntegrationTests.Services
     {
         private readonly TestingFixture _fixture;
         private readonly IAmenityService _amenityService;
+        private readonly IEmployeeService _employeeService;
 
         public AmenityServiceTests(TestingFixture fixture)
         {
             _fixture = fixture;
             var scope = fixture.ServiceProvider.CreateScope();
             _amenityService = scope.ServiceProvider.GetRequiredService<IAmenityService>();
+            _employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
         }
 
         [Fact]
         public async Task GetAll_ShouldReturnEmptyList_WhenNoAmenitiesExist()
         {
+            // Arrange
+            await _fixture.DisposeAsync();
+
             // Act
             var amenities = await _amenityService.GetAll();
 
@@ -32,7 +37,9 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task Add_ShouldCreateAmenity_WithValidData()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var employee = await _fixture.CreateEmployee();
+
             var request = new CreateAmenityRequest
             {
                 ServiceName = "Haircut",
@@ -48,7 +55,6 @@ namespace ApplicaitonIntegrationTests.Services
 
             // Assert
             createdAmenity.Should().NotBeNull();
-            createdAmenity.Id.Should().Be(id);
             createdAmenity.ServiceName.Should().Be(request.ServiceName);
             createdAmenity.Description.Should().Be(request.Description);
             createdAmenity.Price.Should().Be(request.Price);
@@ -59,7 +65,9 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task GetById_ShouldReturnAmenity_WhenAmenityExists()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var employee = await _fixture.CreateEmployee();
+
             var request = new CreateAmenityRequest
             {
                 ServiceName = "Coloring",
@@ -82,6 +90,7 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task GetById_ShouldThrowNotFoundException_WhenAmenityNotExists()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var nonExistingId = 9999;
 
             // Act & Assert
@@ -93,7 +102,10 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task Update_ShouldModifyExistingAmenity()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var employee = await _fixture.CreateEmployee();
+
+            // Create initial amenity
             var createRequest = new CreateAmenityRequest
             {
                 ServiceName = "Old Service",
@@ -102,8 +114,10 @@ namespace ApplicaitonIntegrationTests.Services
                 Price = 100,
                 DurationMinutes = 10
             };
+
             var id = await _amenityService.Add(createRequest);
 
+            // Prepare update data
             var updateRequest = new UpdateAmenityRequest
             {
                 AmenityId = id,
@@ -116,9 +130,13 @@ namespace ApplicaitonIntegrationTests.Services
 
             // Act
             await _amenityService.Update(updateRequest);
+
+            // Get updated amenity
             var updatedAmenity = await _amenityService.GetById(id);
 
             // Assert
+            updatedAmenity.Should().NotBeNull();
+            updatedAmenity.Id.Should().Be(id);
             updatedAmenity.ServiceName.Should().Be(updateRequest.ServiceName);
             updatedAmenity.Description.Should().Be(updateRequest.Description);
             updatedAmenity.Price.Should().Be(updateRequest.Price);
@@ -129,7 +147,9 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task Delete_ShouldRemoveAmenity()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var employee = await _fixture.CreateEmployee();
+
             var request = new CreateAmenityRequest
             {
                 ServiceName = "Temporary Service",
@@ -152,7 +172,9 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task GetAll_ShouldReturnAllCreatedAmenities()
         {
             // Arrange
+            await _fixture.DisposeAsync();
             var employee = await _fixture.CreateEmployee();
+
             var request1 = new CreateAmenityRequest
             {
                 ServiceName = "Service 1",
@@ -161,6 +183,7 @@ namespace ApplicaitonIntegrationTests.Services
                 Price = 100,
                 DurationMinutes = 10
             };
+
             var request2 = new CreateAmenityRequest
             {
                 ServiceName = "Service 2",
@@ -169,6 +192,7 @@ namespace ApplicaitonIntegrationTests.Services
                 Price = 200,
                 DurationMinutes = 20
             };
+
             await _amenityService.Add(request1);
             await _amenityService.Add(request2);
 
@@ -176,9 +200,31 @@ namespace ApplicaitonIntegrationTests.Services
             var amenities = (await _amenityService.GetAll()).ToList();
 
             // Assert
-            amenities.Should().HaveCountGreaterThanOrEqualTo(2);
+            amenities.Should().HaveCount(2);
             amenities.Should().Contain(a => a.ServiceName == request1.ServiceName);
             amenities.Should().Contain(a => a.ServiceName == request2.ServiceName);
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowNotFoundException_WhenAmenityNotExists()
+        {
+            // Arrange
+            await _fixture.DisposeAsync();
+            var employee = await _fixture.CreateEmployee();
+
+            var updateRequest = new UpdateAmenityRequest
+            {
+                AmenityId = 9999, // Non-existing ID
+                ServiceName = "Non-existent",
+                Description = "Should fail",
+                AuthorId = employee.Id,
+                Price = 100,
+                DurationMinutes = 10
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<EntityUpdateException>(
+                () => _amenityService.Update(updateRequest));
         }
     }
 }
