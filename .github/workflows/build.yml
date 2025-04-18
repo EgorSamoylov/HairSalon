@@ -1,4 +1,4 @@
-"name: Build and Test
+name: Build and Test
 
 on:
   push:
@@ -90,4 +90,4 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          trx_files: ""**/TestResults/**/*.trx"""
+          trx_files: ""**/TestResults/**/*.trx""
