@@ -45,13 +45,13 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test with Coverage
-        run: dotnet test --no-build --verbosity normal --logger trx --collect:""XPlat Code Coverage"" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage
+        run: dotnet test --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/coverage/
 
       - name: Install ReportGenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.25
 
       - name: Generate Coverage Report
-        run: reportgenerator -reports:""tests/*/TestResults/*/coverage.cobertura.xml"" -targetdir:coverage -reporttypes:HtmlInline,Cobertura,MarkdownSummary
+        run: reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:./coverage -reporttypes:HtmlInline;Cobertura;MarkdownSummary
 
       - name: Upload Coverage Report as Artifact
         uses: actions/upload-artifact@v4
@@ -62,7 +62,7 @@ jobs:
       - name: Publish Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: ""coverage/Cobertura.xml""
+          filename: "coverage/Cobertura.xml"
           badge: true
           fail_below_min: false
           format: markdown
@@ -84,10 +84,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: ""**/TestResults/**/*.trx""
+          path: "**/TestResults/**/*.trx"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          trx_files: ""**/TestResults/**/*.trx""
+          trx_files: "**/TestResults/**/*.trx"
