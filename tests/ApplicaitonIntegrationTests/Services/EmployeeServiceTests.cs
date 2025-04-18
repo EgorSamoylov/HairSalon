@@ -144,7 +144,6 @@ namespace ApplicaitonIntegrationTests.Services
         public async Task Delete_ShouldRemoveEmployee()
         {
             // Arrange
-            await _fixture.DisposeAsync();
             var request = new CreateEmployeeRequest
             {
                 FirstName = "ToDelete",
@@ -159,8 +158,13 @@ namespace ApplicaitonIntegrationTests.Services
             await _employeeService.Delete(id);
 
             // Assert
-            await Assert.ThrowsAsync<EntityDeleteException>(
+            await Assert.ThrowsAsync<NotFoundApplicationException>(
                 () => _employeeService.GetById(id));
+
+            // Дополнительная проверка, что повторное удаление выбрасывает правильное исключение
+            await Assert.ThrowsAsync<EntityDeleteException>(
+                () => _employeeService.Delete(id));
+
         }
 
         [Fact]

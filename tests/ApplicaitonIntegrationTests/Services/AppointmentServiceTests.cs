@@ -66,7 +66,7 @@ namespace ApplicaitonIntegrationTests.Services
             createdAppointment.Should().NotBeNull();
             createdAppointment.ClientId.Should().Be(request.ClientId);
             createdAppointment.EmployeeId.Should().Be(request.EmployeeId);
-            createdAppointment.ServiceId.Should().Be(request.AmenityId);
+            createdAppointment.ServiceId.Should().Be(request.AmenityId); // Здесь проверяем ServiceId, а не AmenityId
             createdAppointment.AppointmentDateTime.Should().BeCloseTo(request.AppointmentDateTime, TimeSpan.FromSeconds(1));
             createdAppointment.Notes.Should().Be(request.Notes);
         }
