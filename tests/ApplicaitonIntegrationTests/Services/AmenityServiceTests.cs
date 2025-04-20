@@ -164,8 +164,11 @@ namespace ApplicaitonIntegrationTests.Services
             await _amenityService.Delete(id);
 
             // Assert
-            await Assert.ThrowsAsync<NotFoundApplicationException>(
-                () => _amenityService.GetById(id));
+            await FluentActions
+                .Invoking(() => _amenityService.GetById(id))
+                .Should()
+                .ThrowAsync<NotFoundApplicationException>()
+                .WithMessage("Amenity not found.");
         }
 
         [Fact]

@@ -157,8 +157,11 @@ namespace ApplicaitonIntegrationTests.Services
             await _clientService.Delete(id);
 
             // Assert
-            await Assert.ThrowsAsync<NotFoundApplicationException>(
-                () => _clientService.GetById(id));
+            await FluentActions
+                .Invoking(() => _clientService.GetById(id))
+                .Should()
+                .ThrowAsync<NotFoundApplicationException>()
+                .WithMessage("Client not found.");
         }
 
         [Fact]

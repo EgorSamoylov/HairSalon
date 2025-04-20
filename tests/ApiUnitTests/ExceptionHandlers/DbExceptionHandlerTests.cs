@@ -1,4 +1,5 @@
 ﻿using Api.ExceptionHandlers;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Data.Common;
@@ -43,8 +44,8 @@ namespace ApiUnitTests.ExceptionHandlers
             var result = await _handler.TryHandleAsync(_httpContext, exception, CancellationToken.None);
 
             // Assert
-            Assert.False(result);
-            Assert.Equal(StatusCodes.Status200OK, _httpContext.Response.StatusCode); // Default status
+            result.Should().BeFalse();
+            _httpContext.Response.StatusCode.Should().Be(StatusCodes.Status200OK);
             _problemDetailsServiceMock.Verify(x => x.WriteAsync(It.IsAny<ProblemDetailsContext>()), Times.Never);
         }
 
@@ -81,9 +82,9 @@ namespace ApiUnitTests.ExceptionHandlers
             var result = await _handler.TryHandleAsync(_httpContext, exception, CancellationToken.None);
 
             // Assert
-            Assert.False(result);
-            Assert.Equal(originalStatusCode, _httpContext.Response.StatusCode);
-            Assert.Null(_httpContext.Response.ContentType);
+            result.Should().BeFalse();
+            _httpContext.Response.StatusCode.Should().Be(originalStatusCode);
+            _httpContext.Response.ContentType.Should().BeNull();
         }
     }
 }

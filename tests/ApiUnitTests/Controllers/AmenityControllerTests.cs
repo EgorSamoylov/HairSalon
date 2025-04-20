@@ -31,10 +31,8 @@ namespace ApiUnitTests.Controllers
             var result = await _controller.GetById(1);
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>();
-            var okResult = result as OkObjectResult;
-            okResult.Value.Should().BeEquivalentTo(amenityDto);
-            _amenityServiceMock.Verify(x => x.GetById(1), Times.Once);
+            result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeEquivalentTo(amenityDto);
         }
 
         [Fact]

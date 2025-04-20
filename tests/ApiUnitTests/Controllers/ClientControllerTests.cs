@@ -16,17 +16,18 @@ namespace ApiUnitTests.Controllers
     {
         private readonly Mock<IClientService> _clientServiceMock;
         private readonly ClientController _controller;
+        private readonly Faker faker;
 
         public ClientControllerTests()
         {
             _clientServiceMock = new Mock<IClientService>();
             _controller = new ClientController(_clientServiceMock.Object);
+            faker = new Faker();
         }
 
         [Fact]
         public async Task GetById_ShouldReturnOkResult_WhenClientExists()
         {
-            Faker faker = new Faker();
             // Arrange
             var clientDto = new ClientDTO 
             { 
@@ -52,7 +53,6 @@ namespace ApiUnitTests.Controllers
         [Fact]
         public async Task GetAll_ShouldReturnOkResult_WithClientsList()
         {
-            Faker faker = new Faker();
             // Arrange
             var clients = new List<ClientDTO>
             {
@@ -89,7 +89,6 @@ namespace ApiUnitTests.Controllers
         [Fact]
         public async Task Add_ShouldReturnCreatedAtAction_WithClientId()
         {
-            Faker faker = new Faker();
             // Arrange
             var request = new CreateClientRequest
             {
@@ -117,7 +116,6 @@ namespace ApiUnitTests.Controllers
         [Fact]
         public async Task Update_ShouldReturnNoContent_WhenSuccess()
         {
-            Faker faker = new Faker();
             // Arrange
             var request = new UpdateClientRequest
             {

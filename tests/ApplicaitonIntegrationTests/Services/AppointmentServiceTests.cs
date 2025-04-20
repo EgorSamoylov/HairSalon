@@ -181,8 +181,11 @@ namespace ApplicaitonIntegrationTests.Services
             await _appointmentService.Delete(id);
 
             // Assert
-            await Assert.ThrowsAsync<NotFoundApplicationException>(
-                () => _appointmentService.GetById(id));
+            await FluentActions
+                .Invoking(() => _appointmentService.GetById(id))
+                .Should()
+                .ThrowAsync<NotFoundApplicationException>()
+                .WithMessage("Appointment not found.");
         }
 
         [Fact]
