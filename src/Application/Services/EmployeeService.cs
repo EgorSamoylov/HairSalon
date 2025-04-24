@@ -37,7 +37,7 @@ namespace Application.Services
             var result = await _employeeRepository.Delete(id);
             if (!result)
             {
-                throw new EntityDeleteException("Employee not found");
+                throw new EntityDeleteException("Employee for deletion not found");
             }
         }
 

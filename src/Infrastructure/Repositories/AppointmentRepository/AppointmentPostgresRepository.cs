@@ -21,8 +21,8 @@ namespace Infrastructure.Repositories.AppointmentRepository
         public async Task<int> Create(Appointment appointment)
         {
             var appointmentId = await _connection.QuerySingleAsync<int>(
-                @"INSERT INTO  appointments (client_id, employee_id, amenity_id, appointment_datetime, notes)
-                VALUES (@ClientId, @EmployeeId, @AmenityId, @AppointmentDatetime, @Notes)
+                @"INSERT INTO  appointments (client_id, employee_id, service_id, appointment_datetime, notes)
+                VALUES (@ClientId, @EmployeeId, @ServiceId, @AppointmentDateTime, @Notes)
                 RETURNING id",
                 new { appointment.ClientId, appointment.EmployeeId, appointment.ServiceId, appointment.AppointmentDateTime, appointment.Notes });
 
@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories.AppointmentRepository
                     id, 
                     client_id AS clientId, 
                     employee_id AS employeeId,
-                    amenity_id AS serviceId,
+                    service_id AS serviceId,
                     appointment_datetime AS appointmentDateTime,
                     notes
                 FROM appointments");
@@ -60,8 +60,8 @@ namespace Infrastructure.Repositories.AppointmentRepository
                     id, 
                     client_id AS clientId, 
                     employee_id AS employeeId,
-                    amenity_id AS serviceId,
-                    appointment_datetime AS appointmentDateTiem,
+                    service_id AS serviceId,
+                    appointment_datetime AS appointmentDateTime,
                     notes
                 FROM appointments
                 WHERE Id = @id", new { Id = id });
@@ -75,8 +75,8 @@ namespace Infrastructure.Repositories.AppointmentRepository
                 @"UPDATE appointments
                     SET client_id = @ClientId,
                         employee_id = @EmployeeId,
-                        amenity_id = @AmenityId,
-                        appointment_datetime = @AppointmentDatetime,
+                        service_id = @ServiceId,
+                        appointment_datetime = @AppointmentDateTime,
                         notes = @Notes
                     WHERE Id = @id",
                 appointment);

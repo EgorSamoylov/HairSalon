@@ -63,6 +63,7 @@ namespace Application.Services
         {
             var amenity = new Amenity()
             {
+                Id = request.AmenityId,
                 ServiceName = request.ServiceName,
                 Description = request.Description,
                 AuthorId = request.AuthorId,

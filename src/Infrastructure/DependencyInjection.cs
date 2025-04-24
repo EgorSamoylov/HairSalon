@@ -1,15 +1,10 @@
-﻿using Infrastructure.Repositories.AmenityRepository;
+﻿using FluentMigrator.Runner;
+using Infrastructure.Repositories.AmenityRepository;
 using Infrastructure.Repositories.AppointmentRepository;
 using Infrastructure.Repositories.ClientRepository;
 using Infrastructure.Repositories.EmployeeRepository;
-using Microsoft.Extensions.DependencyInjection;
-using FluentMigrator.Runner;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System.Reflection;
 
@@ -38,11 +33,12 @@ namespace Infrastructure
             services.AddTransient<IAmenityRepository, AmenityPostgresRepository>();
 
             services.AddFluentMigratorCore()
-                .ConfigureRunner(
-                    rb => rb.AddPostgres().WithGlobalConnectionString("PostgresDB")
-                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations()
-                )
-                .AddLogging(lb => lb.AddFluentMigratorConsole());
+                    .ConfigureRunner(
+                    rb => rb
+                    .AddPostgres()
+                    .WithGlobalConnectionString("PostgresDB")
+                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
+                    .AddLogging(lb => lb.AddFluentMigratorConsole());
 
             services.AddScoped<Database.MigrationRunner>(); // наш мигратор
 
