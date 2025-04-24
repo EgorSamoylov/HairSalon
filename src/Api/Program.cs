@@ -2,10 +2,25 @@ using Infrastructure;
 using Application;
 using Infrastructure.Database;
 using Api.ExceptionHandlers;
+using Serilog;
+using Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var logPattern = @"{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [ClientIp={ClientIp}] {Message:lj}{NewLine}{Exception}";
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.WithClientIp()
+    .WriteTo.Console(outputTemplate: logPattern)
+    .WriteTo.File(Path.Combine("logs", "quiz-backend-.log"),
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        rollOnFileSizeLimit: true,
+        outputTemplate: logPattern)
+.CreateLogger();
+
+builder.Services.AddSerilog();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,12 +42,16 @@ using (var scope = app.Services.CreateScope())
     migrationRunner.Run();
 }
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+app.UseMiddleware<PerformanceMiddleware>(TimeSpan.FromMilliseconds(700));
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
