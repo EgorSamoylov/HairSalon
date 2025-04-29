@@ -7,6 +7,7 @@ using Bogus;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Repositories.AmenityRepository;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ApplicationUnitTests.Services
@@ -45,7 +46,11 @@ namespace ApplicationUnitTests.Services
             _amenityRepositoryMock = new Mock<IAmenityRepository>();
             var mappingConfig = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             _mapper = mappingConfig.CreateMapper();
-            _amenityService = new AmenityService(_amenityRepositoryMock.Object, _mapper);
+            var loggerMock = new Mock<ILogger<AmenityService>>();
+            _amenityService = new AmenityService(
+                _amenityRepositoryMock.Object, 
+                _mapper,
+                loggerMock.Object);
         }
 
         [Fact]

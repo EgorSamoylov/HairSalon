@@ -13,16 +13,22 @@ namespace Infrastructure.Database.Migrations
     {
         public override void Up()
         {
-            Rename.Column("amenity_id")
+            if (Schema.Table("appointments").Column("amenity_id").Exists())
+            {
+                Rename.Column("amenity_id")
                   .OnTable("appointments")
                   .To("service_id");
+            }
         }
 
         public override void Down()
         {
-            Rename.Column("service_id")
+            if (Schema.Table("appointments").Column("service_id").Exists())
+            {
+                Rename.Column("service_id")
                   .OnTable("appointments")
                   .To("amenity_id");
+            }
         }
     }
 }

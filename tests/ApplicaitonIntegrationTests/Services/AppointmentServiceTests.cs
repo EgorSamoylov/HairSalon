@@ -185,7 +185,7 @@ namespace ApplicaitonIntegrationTests.Services
                 .Invoking(() => _appointmentService.GetById(id))
                 .Should()
                 .ThrowAsync<NotFoundApplicationException>()
-                .WithMessage("Appointment not found.");
+                .WithMessage("Appointment not found");
         }
 
         [Fact]

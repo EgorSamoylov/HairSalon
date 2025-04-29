@@ -12,12 +12,12 @@ namespace Application.Services
     {
         private readonly IEmployeeRepository _employeeRepository;
         private IMapper _mapper;
-        private readonly ILogger<ClientService> _logger;
+        private readonly ILogger<EmployeeService> _logger;
 
         public EmployeeService(
             IEmployeeRepository employeeRepository, 
             IMapper mapper,
-            ILogger<ClientService> logger)
+            ILogger<EmployeeService> logger)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
