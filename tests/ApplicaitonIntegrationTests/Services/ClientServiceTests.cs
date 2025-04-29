@@ -161,7 +161,7 @@ namespace ApplicaitonIntegrationTests.Services
                 .Invoking(() => _clientService.GetById(id))
                 .Should()
                 .ThrowAsync<NotFoundApplicationException>()
-                .WithMessage("Client not found.");
+                .WithMessage("Client not found");
         }
 
         [Fact]

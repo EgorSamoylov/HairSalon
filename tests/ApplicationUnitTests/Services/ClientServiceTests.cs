@@ -7,6 +7,7 @@ using Bogus;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Repositories.ClientRepository;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ApplicationUnitTests.Services
@@ -36,7 +37,11 @@ namespace ApplicationUnitTests.Services
             _clientRepositoryMock = new Mock<IClientRepository>();
             var mappingConfig = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
             _mapper = mappingConfig.CreateMapper();
-            _clientService = new ClientService(_clientRepositoryMock.Object, _mapper);
+            var loggerMock = new Mock<ILogger<ClientService>>();
+            _clientService = new ClientService(
+                _clientRepositoryMock.Object, 
+                _mapper,
+                loggerMock.Object);
         }
 
         [Fact]

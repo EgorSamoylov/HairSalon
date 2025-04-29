@@ -168,7 +168,7 @@ namespace ApplicaitonIntegrationTests.Services
                 .Invoking(() => _amenityService.GetById(id))
                 .Should()
                 .ThrowAsync<NotFoundApplicationException>()
-                .WithMessage("Amenity not found.");
+                .WithMessage("Amenity not found");
         }
 
         [Fact]
