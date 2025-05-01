@@ -1,10 +1,14 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
+using Application.Request;
 using Application.Request.EmployeeRequest;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
+using Infrastructure.Repositories.ClientRepository;
 using Infrastructure.Repositories.EmployeeRepository;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace Application.Services
 {
@@ -13,6 +17,8 @@ namespace Application.Services
         private readonly IEmployeeRepository _employeeRepository;
         private IMapper _mapper;
         private readonly ILogger<EmployeeService> _logger;
+        private IPasswordHasher hasher;
+        private IAttachmentService attachmentService;
 
         public EmployeeService(
             IEmployeeRepository employeeRepository, 
@@ -22,6 +28,16 @@ namespace Application.Services
             _employeeRepository = employeeRepository;
             _mapper = mapper;
             _logger = logger;
+        }
+        public async Task<int> Add(RegistrationRequest request)
+        {
+            var user = _mapper.Map<Employee>(request);
+            user.PasswordHash = hasher.HashPassword(request.Password);
+            user.Role = UserRoles.User;
+
+            var userId = await _employeeRepository.Create(user);
+
+            return userId;
         }
 
         public async Task<int> Add(CreateEmployeeRequest request)

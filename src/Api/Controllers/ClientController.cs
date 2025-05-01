@@ -1,10 +1,13 @@
-﻿using Application.Request.ClientRequest;
+﻿using Api.Extensions;
+using Application.Request.ClientRequest;
 using Application.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ClientController : ControllerBase
@@ -20,6 +23,18 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var client = await _clientService.GetById(id);
+            return Ok(client);
+        }
+
+        [HttpGet("userInfo")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var clientId = User.GetUserId();
+            if (!clientId.HasValue)
+            {
+                return NotFound();
+            }
+            var client = await _clientService.GetById(clientId.Value);
             return Ok(client);
         }
 

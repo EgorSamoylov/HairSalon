@@ -13,6 +13,10 @@ namespace Application.DTOs
         public required string LastName { get; set; }
         public required string PhoneNumber { get; set; }
         public required string Email { get; set; }
+        public string? PasswordHash { get; set; }
+        public string? Role { get; set; }
         public string? Note { get; set; }
+        public int? LogoAttachmentId { get; set; }
+        public string? LogoAttachmentUrl { get; set; }
     }
 }

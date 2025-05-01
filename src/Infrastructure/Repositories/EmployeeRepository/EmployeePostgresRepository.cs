@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Infrastructure.Database.TypeMappings;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastructure.Repositories.EmployeeRepository
 {
@@ -20,67 +23,52 @@ namespace Infrastructure.Repositories.EmployeeRepository
 
         public async Task<int> Create(Employee employee)
         {
-            var employeeId = await _connection.QuerySingleAsync<int>(
-                @"INSERT INTO  employees (first_name, last_name, phone_number, email, position)
-                VALUES (@FirstName, @LastName, @PhoneNumber, @email, @Position)
-                RETURNING id",
-                new { employee.FirstName, employee.LastName, employee.PhoneNumber, employee.Email, employee.Position });
+            const string query =
+                @"INSERT INTO  employees (first_name, last_name, phone_number, email, position, password_hash, role)
+                VALUES (@FirstName, @LastName, @PhoneNumber, @email, @Position, @Passwordhash, @Role::user_role)
+                RETURNING id";
 
-            return employeeId;
+            return await _connection.ExecuteScalarAsync<int>(query, employee.AsDapperParams());
         }
 
         public async Task<bool> Delete(int id)
         {
-            var affectedRows = await _connection.ExecuteAsync(
-                @"DELETE FROM employees WHERE @Id = id",
-                new { Id = id });
-
+            const string query = "DELETE FROM employees WHERE id = @Id";
+            var affectedRows = await _connection.ExecuteAsync(query, new { Id = id });
             return affectedRows > 0;
         }
 
-        public async Task<List<Employee>> ReadAll()
+        public async Task<Employee?> ReadByEmail(string email)
         {
-            var employees = await _connection.QueryAsync<Employee>(
-                @"SELECT 
-                    id, 
-                    first_name AS firstName, 
-                    last_name AS lastName,
-                    phone_number AS phoneNumber,
-                    email, 
-                    position
-                FROM employees");
+            const string query = "SELECT * FROM users WHERE email = @Email";
+            return await _connection.QuerySingleOrDefaultAsync<Employee>(query, new { Email = email });
+        }
 
-            return employees.ToList();
+
+        public async Task<IEnumerable<Employee>> ReadAll()
+        {
+            const string query = "SELECT * FROM employees";
+            return await _connection.QueryAsync<Employee>(query);
         }
 
         public async Task<Employee?> ReadById(int id)
         {
-            var employee = await _connection.QueryFirstOrDefaultAsync<Employee>(
-                @"SELECT 
-                    id, 
-                    first_name AS firstName, 
-                    last_name AS lastName,
-                    phone_number AS phoneNumber,
-                    email, 
-                    position
-                FROM employees
-                WHERE Id = @id", new { Id = id });
-
-            return employee;
+            const string query = "SELECT * FROM employees WHERE id = @Id";
+            return await _connection.QuerySingleOrDefaultAsync<Employee>(query, new { Id = id });
         }
 
         public async Task<bool> Update(Employee employee)
         {
-            var affectedRows = await _connection.ExecuteAsync(
+            const string query =
                 @"UPDATE employees
                     SET first_name = @FirstName,
                         last_name = @LastName,
                         phone_number = @PhoneNumber,
                         email = @Email,
                         position = @Position
-                    WHERE Id = @id",
-                employee);
+                    WHERE Id = @id";
 
+            var affectedRows = await _connection.ExecuteAsync(query, employee.AsDapperParams());
             return affectedRows > 0;
         }
     }

@@ -10,9 +10,10 @@ namespace Infrastructure.Repositories.ClientRepository
     public interface IClientRepository
     {
         public Task<Client?> ReadById(int id);
-        public Task<List<Client>> ReadAll();
+        public Task<IEnumerable<Client>> ReadAll();
         public Task<int> Create(Client client);
         public Task<bool> Update(Client client);
+        Task<Client?> ReadByEmail(string email);
         public Task<bool> Delete(int id);
     }
 }

@@ -1,6 +1,9 @@
-﻿using FluentMigrator.Runner;
+﻿using Dapper;
+using FluentMigrator.Runner;
+using Infrastructure.Database.TypeMappings;
 using Infrastructure.Repositories.AmenityRepository;
 using Infrastructure.Repositories.AppointmentRepository;
+using Infrastructure.Repositories.AttachmentRepository;
 using Infrastructure.Repositories.ClientRepository;
 using Infrastructure.Repositories.EmployeeRepository;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +34,10 @@ namespace Infrastructure
             services.AddTransient<IEmployeeRepository, EmployeePostgresRepository>();
             services.AddTransient<IClientRepository, ClientPostgresRepository>();
             services.AddTransient<IAmenityRepository, AmenityPostgresRepository>();
+            services.AddTransient<IAttachmentRepository, AttachmentPostgresRepository>();
+
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.AddTypeHandler(new UserRolesTypeHandler());
 
             services.AddFluentMigratorCore()
                     .ConfigureRunner(

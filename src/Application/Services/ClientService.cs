@@ -1,8 +1,10 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
+using Application.Request;
 using Application.Request.ClientRequest;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Repositories.ClientRepository;
 using Microsoft.Extensions.Logging;
 
@@ -14,6 +16,8 @@ namespace Application.Services
         private readonly IClientRepository _clientRepository;
         private IMapper _mapper;
         private readonly ILogger<ClientService> _logger;
+        private IPasswordHasher hasher;
+        private IAttachmentService attachmentService;
 
 
         public ClientService(
@@ -24,6 +28,17 @@ namespace Application.Services
             _clientRepository = clientRepository;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public async Task<int> Add(RegistrationRequest request)
+        {
+            var user = _mapper.Map<Client>(request);
+            user.PasswordHash = hasher.HashPassword(request.Password);
+            user.Role = UserRoles.User;
+
+            var userId = await _clientRepository.Create(user);
+
+            return userId;
         }
 
         public async Task<int> Add(CreateClientRequest request)

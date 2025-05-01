@@ -1,9 +1,12 @@
-﻿using Application.Request.EmployeeRequest;
+﻿using Api.Extensions;
+using Application.Request.EmployeeRequest;
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
@@ -19,6 +22,18 @@ namespace Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var employee = await _employeeService.GetById(id);
+            return Ok(employee);
+        }
+
+        [HttpGet("userInfo")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var employeeId = User.GetUserId();
+            if (!employeeId.HasValue)
+            {
+                return NotFound();
+            }
+            var employee = await _employeeService.GetById(employeeId.Value);
             return Ok(employee);
         }
 

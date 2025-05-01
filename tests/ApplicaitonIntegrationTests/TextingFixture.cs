@@ -1,6 +1,7 @@
 ﻿using Application;
 using Bogus;
 using Domain.Entities;
+using Domain.Enums;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Processors;
 using Infrastructure;
@@ -86,6 +87,7 @@ namespace ApplicaitonIntegrationTests
                 FirstName = _faker.Name.FirstName(),
                 LastName = _faker.Name.LastName(),
                 Email = _faker.Person.Email,
+                Role = UserRoles.Admin,
                 PhoneNumber = _faker.Person.Phone
             });
 
@@ -107,6 +109,7 @@ namespace ApplicaitonIntegrationTests
                 LastName = _faker.Name.LastName(),
                 Email = _faker.Person.Email,
                 PhoneNumber = _faker.Person.Phone,
+                Role = UserRoles.User,
                 Position = "hairdresser"
             });
 
