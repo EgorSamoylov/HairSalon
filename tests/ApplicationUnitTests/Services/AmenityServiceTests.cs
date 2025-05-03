@@ -23,7 +23,7 @@ namespace ApplicationUnitTests.Services
         public AmenityServiceTests()
         {
             _faker = new Faker();
-            var author = new Employee()
+            var author = new User()
             {
                 Id = 1,
                 FirstName = _faker.Person.FirstName,

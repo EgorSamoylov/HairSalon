@@ -5,7 +5,6 @@ using Infrastructure.Repositories.AmenityRepository;
 using Infrastructure.Repositories.AppointmentRepository;
 using Infrastructure.Repositories.AttachmentRepository;
 using Infrastructure.Repositories.ClientRepository;
-using Infrastructure.Repositories.EmployeeRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -31,8 +30,7 @@ namespace Infrastructure
             });
 
             services.AddTransient<IAppointmentRepository, AppointmentPostgresRepository>();
-            services.AddTransient<IEmployeeRepository, EmployeePostgresRepository>();
-            services.AddTransient<IClientRepository, ClientPostgresRepository>();
+            services.AddTransient<IUserRepository, UserPostgresRepository>();
             services.AddTransient<IAmenityRepository, AmenityPostgresRepository>();
             services.AddTransient<IAttachmentRepository, AttachmentPostgresRepository>();
 

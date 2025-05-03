@@ -1,6 +1,6 @@
 ﻿namespace Application.Services
 {
-    public class BCryptHasher : IPasswordHasher
+    public class BCryptHasher : IBCryptHasher
     {
         public string HashPassword(string password)
         {

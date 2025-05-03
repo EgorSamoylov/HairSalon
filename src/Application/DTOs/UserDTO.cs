@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
-    public class ClientDTO
+    public class UserDTO
     {
         public int Id { get; set; }
         public required string FirstName { get; set; }
@@ -16,6 +10,7 @@ namespace Application.DTOs
         public string? PasswordHash { get; set; }
         public string? Role { get; set; }
         public string? Note { get; set; }
+        public string? Position { get; set; }
         public int? LogoAttachmentId { get; set; }
         public string? LogoAttachmentUrl { get; set; }
     }

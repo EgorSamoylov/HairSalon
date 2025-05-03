@@ -14,11 +14,7 @@ namespace Infrastructure.Database.Migrations
         {
             Execute.Sql("CREATE TYPE user_role AS ENUM ('User', 'Admin')");
 
-            Alter.Table("clients")
-                .AddColumn("password_hash").AsString(255).Nullable()
-                .AddColumn("role").AsCustom("user_role").WithDefaultValue("User");
-
-            Alter.Table("employees")
+            Alter.Table("users")
                 .AddColumn("password_hash").AsString(255).Nullable()
                 .AddColumn("role").AsCustom("user_role").WithDefaultValue("User");
         }
@@ -26,11 +22,7 @@ namespace Infrastructure.Database.Migrations
         {
             Delete.Column("password_hash")
                 .Column("role")
-                .FromTable("clients");
-
-            Delete.Column("password_hash")
-                .Column("role")
-                .FromTable("employees");
+                .FromTable("users");
 
             Execute.Sql("DROP TYPE user_role");
         }

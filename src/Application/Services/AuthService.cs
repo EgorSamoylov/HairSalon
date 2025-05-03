@@ -2,7 +2,8 @@
 using Application.Response;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Repositories.EmployeeRepository;
+using Domain.Enums;
+using Infrastructure.Repositories.ClientRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,16 +12,16 @@ using System.Text;
 
 namespace Application.Services
 {
-    public class AuthEmployeeService(
+    internal class AuthService(
          IConfiguration configuration,
          IMapper mapper,
-         IEmployeeRepository userRepository,
-         IPasswordHasher hasher
-     ) : IAuthEmployeeService
+         IUserRepository userRepository,
+         IBCryptHasher hasher
+     ) : IAuthService
     {
         public async Task<int> Register(RegistrationRequest request)
         {
-            var user = mapper.Map<Employee>(request);
+            var user = mapper.Map<User>(request);
             user.PasswordHash = hasher.HashPassword(request.Password);
 
             var userId = await userRepository.Create(user);
@@ -40,7 +41,17 @@ namespace Application.Services
 
             return new LoginResponse() { Token = token };
         }
-        public string GenerateJwtToken(Employee user)
+        public async Task<int> Add(RegistrationRequest request)
+        {
+            var user = mapper.Map<User>(request);
+            user.PasswordHash = hasher.HashPassword(request.Password);
+            user.Role = UserRoles.User;
+
+            var userId = await userRepository.Create(user);
+
+            return userId;
+        }
+        public string GenerateJwtToken(User user)
         {
             var jwtSecret = configuration["JwtSettings:Secret"] ?? throw new ArgumentNullException("JwtSettings:Secret");
             var jwtIssuer = configuration["JwtSettings:Issuer"] ?? throw new ArgumentNullException("JwtSettings:Issuer");

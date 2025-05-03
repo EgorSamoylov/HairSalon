@@ -7,7 +7,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AuthEmployeeController(IAuthEmployeeService authService) : ControllerBase
+    public class AuthController(IAuthService authService) : ControllerBase
     {
         [EnableRateLimiting("register")]
         [HttpPost("register")]
@@ -19,7 +19,7 @@ namespace Api.Controllers
 
         [EnableRateLimiting("login")]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Application.Request.LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var response = await authService.Login(request);
             return Ok(response);

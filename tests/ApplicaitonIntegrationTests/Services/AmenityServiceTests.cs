@@ -10,14 +10,14 @@ namespace ApplicaitonIntegrationTests.Services
     {
         private readonly TestingFixture _fixture;
         private readonly IAmenityService _amenityService;
-        private readonly IEmployeeService _employeeService;
+        private readonly IUserService _employeeService;
 
         public AmenityServiceTests(TestingFixture fixture)
         {
             _fixture = fixture;
             var scope = fixture.ServiceProvider.CreateScope();
             _amenityService = scope.ServiceProvider.GetRequiredService<IAmenityService>();
-            _employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
+            _employeeService = scope.ServiceProvider.GetRequiredService<IUserService>();
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             var request = new CreateAmenityRequest
             {
@@ -66,7 +66,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             var request = new CreateAmenityRequest
             {
@@ -103,7 +103,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             // Create initial amenity
             var createRequest = new CreateAmenityRequest
@@ -148,7 +148,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             var request = new CreateAmenityRequest
             {
@@ -176,7 +176,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             var request1 = new CreateAmenityRequest
             {
@@ -213,7 +213,7 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
 
             var updateRequest = new UpdateAmenityRequest
             {

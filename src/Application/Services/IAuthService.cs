@@ -4,10 +4,11 @@ using Domain.Entities;
 
 namespace Application.Services
 {
-    public interface IAuthEmployeeService
+    public interface IAuthService
     {
-        string GenerateJwtToken(Employee user);
+        string GenerateJwtToken(User user);
         Task<int> Register(RegistrationRequest request);
         Task<LoginResponse> Login(LoginRequest request);
+        public Task<int> Add(RegistrationRequest request);
     }
 }

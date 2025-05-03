@@ -1,44 +1,44 @@
-﻿using Application.Request.EmployeeRequest;
+﻿using Application.Request.ClientRequest;
 using Application.Services;
 using Application.DTOs;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using FluentAssertions;
-using System.Collections.Generic;
 using Api.Controllers;
 using Bogus;
 using Bogus.DataSets;
 
+
 namespace ApiUnitTests.Controllers
 {
-    public class EmployeeControllerTests
+    public class UserControllerTests
     {
-        private readonly Mock<IEmployeeService> _employeeServiceMock;
-        private readonly EmployeeController _controller;
+        private readonly Mock<IUserService> _userServiceMock;
+        private readonly UserController _controller;
+        private readonly Faker faker;
 
-        public EmployeeControllerTests()
+        public UserControllerTests()
         {
-            _employeeServiceMock = new Mock<IEmployeeService>();
-            _controller = new EmployeeController(_employeeServiceMock.Object);
+            _userServiceMock = new Mock<IUserService>();
+            _controller = new UserController(_userServiceMock.Object);
+            faker = new Faker();
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnOkResult_WhenEmployeeExists()
+        public async Task GetById_ShouldReturnOkResult_WhenUserExists()
         {
-            Faker faker = new Faker();
             // Arrange
-            var employeeDto = new EmployeeDTO
-            {
-                Id = 1,
-                FirstName = faker.Person.FirstName,
+            var userDto = new UserDTO 
+            { 
+                Id = 1, 
+                FirstName = faker.Person.FirstName, 
                 LastName = faker.Person.LastName,
-                Position = "Hairdresser",
                 Email = faker.Person.Email,
                 PhoneNumber = faker.Person.Phone
             };
-            _employeeServiceMock.Setup(x => x.GetById(It.IsAny<int>()))
-                .ReturnsAsync(employeeDto);
+            _userServiceMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .ReturnsAsync(userDto);
 
             // Act
             var result = await _controller.GetById(1);
@@ -46,38 +46,35 @@ namespace ApiUnitTests.Controllers
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
-            okResult.Value.Should().BeEquivalentTo(employeeDto);
-            _employeeServiceMock.Verify(x => x.GetById(1), Times.Once);
+            okResult.Value.Should().BeEquivalentTo(userDto);
+            _userServiceMock.Verify(x => x.GetById(1), Times.Once);
         }
 
         [Fact]
-        public async Task GetAll_ShouldReturnOkResult_WithEmployeesList()
+        public async Task GetAll_ShouldReturnOkResult_WithUsersList()
         {
-            Faker faker = new Faker();
             // Arrange
-            var employees = new List<EmployeeDTO>
+            var users = new List<UserDTO>
             {
-                new EmployeeDTO 
+                new UserDTO
                 {
                     Id = 1,
                     FirstName = faker.Person.FirstName,
                     LastName = faker.Person.LastName,
-                    Position = "Hairdresser",
                     Email = faker.Person.Email,
                     PhoneNumber = faker.Person.Phone
                 },
-                new EmployeeDTO 
-                { 
+                new UserDTO
+                {
                     Id = 2,
                     FirstName = faker.Person.FirstName,
                     LastName = faker.Person.LastName,
-                    Position = "Hairdresser",
                     Email = faker.Person.Email,
                     PhoneNumber = faker.Person.Phone
                 }
             };
-            _employeeServiceMock.Setup(x => x.GetAll())
-                .ReturnsAsync(employees);
+            _userServiceMock.Setup(x => x.GetAll())
+                .ReturnsAsync(users);
 
             // Act
             var result = await _controller.GetAll();
@@ -85,26 +82,24 @@ namespace ApiUnitTests.Controllers
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
-            okResult.Value.Should().BeEquivalentTo(employees);
-            _employeeServiceMock.Verify(x => x.GetAll(), Times.Once);
+            okResult.Value.Should().BeEquivalentTo(users);
+            _userServiceMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Fact]
-        public async Task Add_ShouldReturnCreatedAtAction_WithEmployeeId()
+        public async Task Add_ShouldReturnCreatedAtAction_WithUserId()
         {
-            Faker faker = new Faker();
             // Arrange
-            var request = new CreateEmployeeRequest
+            var request = new CreateUserRequest
             {
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
-                Position = "Hairdresser",
                 Email = faker.Person.Email,
                 PhoneNumber = faker.Person.Phone
             };
-            var employeeId = 1;
-            _employeeServiceMock.Setup(x => x.Add(It.IsAny<CreateEmployeeRequest>()))
-                .ReturnsAsync(employeeId);
+            var userId = 1;
+            _userServiceMock.Setup(x => x.Add(It.IsAny<CreateUserRequest>()))
+                .ReturnsAsync(userId);
 
             // Act
             var result = await _controller.Add(request);
@@ -113,26 +108,24 @@ namespace ApiUnitTests.Controllers
             result.Should().BeOfType<CreatedAtActionResult>();
             var createdAtResult = result as CreatedAtActionResult;
             createdAtResult.ActionName.Should().Be(nameof(_controller.GetById));
-            createdAtResult.Value.Should().BeEquivalentTo(new { Id = employeeId });
-            createdAtResult.RouteValues["id"].Should().Be(employeeId);
-            _employeeServiceMock.Verify(x => x.Add(request), Times.Once);
+            createdAtResult.Value.Should().BeEquivalentTo(new { Id = userId });
+            createdAtResult.RouteValues["id"].Should().Be(userId);
+            _userServiceMock.Verify(x => x.Add(request), Times.Once);
         }
 
         [Fact]
         public async Task Update_ShouldReturnNoContent_WhenSuccess()
         {
-            Faker faker = new Faker();
             // Arrange
-            var request = new UpdateEmployeeRequest
+            var request = new UpdateUserRequest
             {
-                EmployeeId = 1,
+                UserId = 1,
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
-                Position = "Hairdresser",
                 Email = faker.Person.Email,
                 PhoneNumber = faker.Person.Phone
             };
-            _employeeServiceMock.Setup(x => x.Update(It.IsAny<UpdateEmployeeRequest>()))
+            _userServiceMock.Setup(x => x.Update(It.IsAny<UpdateUserRequest>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -140,14 +133,14 @@ namespace ApiUnitTests.Controllers
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
-            _employeeServiceMock.Verify(x => x.Update(request), Times.Once);
+            _userServiceMock.Verify(x => x.Update(request), Times.Once);
         }
 
         [Fact]
         public async Task Delete_ShouldReturnNoContent_WhenSuccess()
         {
             // Arrange
-            _employeeServiceMock.Setup(x => x.Delete(It.IsAny<int>()))
+            _userServiceMock.Setup(x => x.Delete(It.IsAny<int>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -155,7 +148,7 @@ namespace ApiUnitTests.Controllers
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
-            _employeeServiceMock.Verify(x => x.Delete(1), Times.Once);
+            _userServiceMock.Verify(x => x.Delete(1), Times.Once);
         }
     }
 }

@@ -1,14 +1,9 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Client
+    public class User
     {
         public int Id { get; set; }
         [Column("first_name")]
@@ -22,6 +17,7 @@ namespace Domain.Entities
         public string? PasswordHash { get; set; }
         public UserRoles Role { get; set; }
         public string? Note { get; set; }
+        public string? Position { get; set; }
         [Column("logo_attachment_id")]
         public int? LogoAttachmentId { get; set; }
     }

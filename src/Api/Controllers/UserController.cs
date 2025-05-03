@@ -10,60 +10,60 @@ namespace Api.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ClientController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private IClientService _clientService;
+        private IUserService _userService;
 
-        public ClientController(IClientService clientService)
+        public UserController(IUserService clientService)
         {
-            _clientService = clientService;
+            _userService = clientService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var client = await _clientService.GetById(id);
-            return Ok(client);
+            var user = await _userService.GetById(id);
+            return Ok(user);
         }
 
         [HttpGet("userInfo")]
         public async Task<IActionResult> GetUserInfo()
         {
-            var clientId = User.GetUserId();
-            if (!clientId.HasValue)
+            var userId = User.GetUserId();
+            if (!userId.HasValue)
             {
                 return NotFound();
             }
-            var client = await _clientService.GetById(clientId.Value);
-            return Ok(client);
+            var user = await _userService.GetById(userId.Value);
+            return Ok(user);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var clients = await _clientService.GetAll();
-            return Ok(clients);
+            var users = await _userService.GetAll();
+            return Ok(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateClientRequest request)
+        public async Task<IActionResult> Add([FromBody] CreateUserRequest request)
         {
-            var clientId = await _clientService.Add(request);
-            var result = new { Id = clientId };
+            var userId = await _userService.Add(request);
+            var result = new { Id = userId };
             return CreatedAtAction(nameof(GetById), result, result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateClientRequest request)
+        public async Task<IActionResult> Update([FromBody] UpdateUserRequest request)
         {
-            await _clientService.Update(request);
+            await _userService.Update(request);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _clientService.Delete(id);
+            await _userService.Delete(id);
             return NoContent();
         }
     }

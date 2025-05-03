@@ -14,12 +14,10 @@ namespace Application
         {
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddTransient<IAppointmentService, AppointmentService>();
-            services.AddTransient<IClientService, ClientService>();
-            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAmenityService, AmenityService>();
-            services.AddTransient<IAuthClientService, AuthClientService>();
-            services.AddTransient<IAuthEmployeeService, AuthEmployeeService>();
-            services.AddTransient<IPasswordHasher, BCryptHasher>();
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IBCryptHasher, BCryptHasher>();
             services.AddTransient<IAttachmentService, AttachmentService>();
             services.AddTransient<IFileStorageService, FileStorageService>();
 
