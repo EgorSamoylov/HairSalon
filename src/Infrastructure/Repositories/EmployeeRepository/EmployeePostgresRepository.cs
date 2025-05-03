@@ -40,20 +40,20 @@ namespace Infrastructure.Repositories.EmployeeRepository
 
         public async Task<Employee?> ReadByEmail(string email)
         {
-            const string query = "SELECT * FROM users WHERE email = @Email";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, position, role, logo_attachment_id FROM users WHERE email = @Email";
             return await _connection.QuerySingleOrDefaultAsync<Employee>(query, new { Email = email });
         }
 
 
         public async Task<IEnumerable<Employee>> ReadAll()
         {
-            const string query = "SELECT * FROM employees";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, position, role::text, logo_attachment_id FROM employees";
             return await _connection.QueryAsync<Employee>(query);
         }
 
         public async Task<Employee?> ReadById(int id)
         {
-            const string query = "SELECT * FROM employees WHERE id = @Id";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, position, role::text, logo_attachment_id FROM employees WHERE id = @Id";
             return await _connection.QuerySingleOrDefaultAsync<Employee>(query, new { Id = id });
         }
 

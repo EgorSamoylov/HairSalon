@@ -35,19 +35,19 @@ namespace Infrastructure.Repositories.ClientRepository
 
         public async Task<Client?> ReadByEmail(string email)
         {
-            const string query = "SELECT * FROM users WHERE email = @Email";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, note, role, logo_attachment_id FROM users WHERE email = @Email";
             return await _connection.QuerySingleOrDefaultAsync<Client>(query, new { Email = email });
         }
 
         public async Task<IEnumerable<Client>> ReadAll()
         {
-            const string query = "SELECT * FROM clients";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, note, role::text, logo_attachment_id  FROM clients";
             return await _connection.QueryAsync<Client>(query);
         }
 
         public async Task<Client?> ReadById(int id)
         {
-            const string query = "SELECT * FROM clients WHERE id = @Id";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, note, role::text, logo_attachment_id FROM clients WHERE id = @Id";
             return await _connection.QuerySingleOrDefaultAsync<Client>(query, new { Id = id });
         }
 
