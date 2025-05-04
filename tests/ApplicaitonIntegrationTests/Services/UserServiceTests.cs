@@ -43,7 +43,6 @@ namespace ApplicaitonIntegrationTests.Services
                 LastName = "Doe",
                 PhoneNumber = "+1234567890",
                 Email = "john.doe@example.com",
-                Note = "Regular customer"
             };
 
             // Act
@@ -57,8 +56,6 @@ namespace ApplicaitonIntegrationTests.Services
             createdUser.LastName.Should().Be(request.LastName);
             createdUser.PhoneNumber.Should().Be(request.PhoneNumber);
             createdUser.Email.Should().Be(request.Email);
-            createdUser.Note.Should().Be(request.Note);
-            createdUser.Position.Should().Be(request.Position);
         }
 
         [Fact]

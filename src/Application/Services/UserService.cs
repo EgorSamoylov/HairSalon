@@ -47,13 +47,14 @@ namespace Application.Services
                 with PhoneNumber {PhoneNumber},
                 with Email {Email},
                 Note {Note},
-                Posiiton {Position}",
+                Position {Position}",
                 userId,
                 user.FirstName,
                 user.LastName,
                 user.PhoneNumber,
                 user.Email,
-                user.Note);
+                user.Note,
+                user.Position);
             return userId;
         }
 
@@ -108,7 +109,8 @@ namespace Application.Services
                 user.LastName,
                 user.PhoneNumber,
                 user.Email,
-                user.Note);
+                user.Note,
+                user.Position);
 
             return mappedUser;
         }
@@ -128,7 +130,8 @@ namespace Application.Services
                 request.LastName,
                 request.PhoneNumber,
                 request.Email,
-                request.Note);
+                request.Note,
+                request.Position);
 
             var user = new User()
             {

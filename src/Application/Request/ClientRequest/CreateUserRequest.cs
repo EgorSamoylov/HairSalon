@@ -9,10 +9,7 @@ namespace Application.Request.ClientRequest
         public required string PhoneNumber { get; set; }
         public required string Email { get; set; }
         public string? Note { get; set; }
-        public string? Position
-        {
-            get; set;
-        }
+        public string? Position { get; set; }
 
         public class CreateClientRequestValidator : AbstractValidator<CreateUserRequest>
         {
