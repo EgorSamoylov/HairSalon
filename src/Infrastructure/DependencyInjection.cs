@@ -35,7 +35,6 @@ namespace Infrastructure
             services.AddTransient<IAttachmentRepository, AttachmentPostgresRepository>();
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-            SqlMapper.AddTypeHandler(new UserRolesTypeHandler());
 
             services.AddFluentMigratorCore()
                     .ConfigureRunner(

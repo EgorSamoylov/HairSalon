@@ -1,9 +1,4 @@
 ﻿using FluentMigrator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Migrations
 {
@@ -18,6 +13,7 @@ namespace Infrastructure.Database.Migrations
                 .AddColumn("password_hash").AsString(255).Nullable()
                 .AddColumn("role").AsCustom("user_role").WithDefaultValue("User");
         }
+
         public override void Down()
         {
             Delete.Column("password_hash")

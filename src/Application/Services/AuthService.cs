@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Application.Services
 {
-    internal class AuthService(
+    public class AuthService(
          IConfiguration configuration,
          IMapper mapper,
          IUserRepository userRepository,
@@ -23,11 +23,13 @@ namespace Application.Services
         {
             var user = mapper.Map<User>(request);
             user.PasswordHash = hasher.HashPassword(request.Password);
+            user.Role = UserRoles.User;
 
             var userId = await userRepository.Create(user);
 
             return userId;
         }
+
         public async Task<LoginResponse> Login(LoginRequest request)
         {
             var user = await userRepository.ReadByEmail(request.Email);
@@ -41,17 +43,8 @@ namespace Application.Services
 
             return new LoginResponse() { Token = token };
         }
-        public async Task<int> Add(RegistrationRequest request)
-        {
-            var user = mapper.Map<User>(request);
-            user.PasswordHash = hasher.HashPassword(request.Password);
-            user.Role = UserRoles.User;
 
-            var userId = await userRepository.Create(user);
-
-            return userId;
-        }
-        public string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User user)
         {
             var jwtSecret = configuration["JwtSettings:Secret"] ?? throw new ArgumentNullException("JwtSettings:Secret");
             var jwtIssuer = configuration["JwtSettings:Issuer"] ?? throw new ArgumentNullException("JwtSettings:Issuer");

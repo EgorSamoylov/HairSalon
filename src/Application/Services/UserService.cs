@@ -14,9 +14,6 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private IMapper _mapper;
         private readonly ILogger<UserService> _logger;
-        private IBCryptHasher hasher;
-        private IAttachmentService attachmentService;
-
 
         public UserService(
             IUserRepository userRepository,

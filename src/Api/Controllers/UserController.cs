@@ -27,6 +27,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("userInfo")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserInfo()
         {
             var userId = User.GetUserId();
@@ -46,6 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] CreateUserRequest request)
         {
             var userId = await _userService.Add(request);
