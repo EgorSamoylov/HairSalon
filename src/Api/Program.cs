@@ -65,6 +65,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddProblemDetails();
 //builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<AuthServiceExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
