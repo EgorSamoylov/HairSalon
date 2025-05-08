@@ -103,13 +103,12 @@ builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = (int)HttpStatusCode.TooManyRequests;
 
-    // Общие ограничения для всех операций аутентификации
     options.AddFixedWindowLimiter("auth", limiterOptions =>
     {
-        limiterOptions.Window = TimeSpan.FromMinutes(1); // 1-минутное окно
-        limiterOptions.PermitLimit = 5; // Максимум 5 запросов в минуту
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.PermitLimit = 5;
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = 2; // Максимум 2 запроса в очереди
+        limiterOptions.QueueLimit = 2;
     });
 });
 
