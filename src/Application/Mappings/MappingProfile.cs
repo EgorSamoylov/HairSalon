@@ -1,4 +1,6 @@
 ﻿using Application.DTOs;
+using Application.Request;
+using Application.Request.ClientRequest;
 using AutoMapper;
 using Domain.Entities;
 
@@ -9,9 +11,14 @@ namespace Application.Mappings
         public MappingProfile()
         {
             CreateMap<Appointment, AppointmentDTO>().ReverseMap();
-            CreateMap<Client, ClientDTO>().ReverseMap();
-            CreateMap<Employee, EmployeeDTO>().ReverseMap();
+
+            CreateMap<User, UserDTO>().ReverseMap();
+
             CreateMap<Amenity, AmenityDTO>().ReverseMap();
+
+            CreateMap<RegistrationRequest, User>();
+
+            CreateMap<UpdateUserRequest, User>();
         }
     }
 }

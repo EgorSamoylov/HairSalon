@@ -13,8 +13,7 @@ namespace ApplicaitonIntegrationTests.Services
     {
         private readonly TestingFixture _fixture;
         private readonly IAppointmentService _appointmentService;
-        private readonly IClientService _clientService;
-        private readonly IEmployeeService _employeeService;
+        private readonly IUserService _userService;
         private readonly IAmenityService _amenityService;
 
         public AppointmentServiceTests(TestingFixture fixture)
@@ -22,8 +21,7 @@ namespace ApplicaitonIntegrationTests.Services
             _fixture = fixture;
             var scope = fixture.ServiceProvider.CreateScope();
             _appointmentService = scope.ServiceProvider.GetRequiredService<IAppointmentService>();
-            _clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
-            _employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
+            _userService = scope.ServiceProvider.GetRequiredService<IUserService>();
             _amenityService = scope.ServiceProvider.GetRequiredService<IAmenityService>();
         }
 
@@ -45,8 +43,8 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var client = await _fixture.CreateClient();
-            var employee = await _fixture.CreateEmployee();
+            var client = await _fixture.CreateUser();
+            var employee = await _fixture.CreateUser();
             var amenity = await CreateTestAmenity();
 
             var request = new CreateAppointmentRequest
@@ -76,8 +74,8 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var client = await _fixture.CreateClient();
-            var employee = await _fixture.CreateEmployee();
+            var client = await _fixture.CreateUser();
+            var employee = await _fixture.CreateUser();
             var amenity = await CreateTestAmenity();
 
             var request = new CreateAppointmentRequest
@@ -115,8 +113,8 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var client = await _fixture.CreateClient();
-            var employee = await _fixture.CreateEmployee();
+            var client = await _fixture.CreateUser();
+            var employee = await _fixture.CreateUser();
             var amenity = await CreateTestAmenity();
 
             // Create initial appointment
@@ -163,8 +161,8 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var client = await _fixture.CreateClient();
-            var employee = await _fixture.CreateEmployee();
+            var client = await _fixture.CreateUser();
+            var employee = await _fixture.CreateUser();
             var amenity = await CreateTestAmenity();
 
             var request = new CreateAppointmentRequest
@@ -193,8 +191,8 @@ namespace ApplicaitonIntegrationTests.Services
         {
             // Arrange
             await _fixture.DisposeAsync();
-            var client = await _fixture.CreateClient();
-            var employee = await _fixture.CreateEmployee();
+            var client = await _fixture.CreateUser();
+            var employee = await _fixture.CreateUser();
             var amenity = await CreateTestAmenity();
             var request1 = new CreateAppointmentRequest
             {
@@ -227,7 +225,7 @@ namespace ApplicaitonIntegrationTests.Services
         }
         private async Task<AmenityDTO> CreateTestAmenity()
         {
-            var employee = await _fixture.CreateEmployee();
+            var employee = await _fixture.CreateUser();
             var request = new CreateAmenityRequest
             {
                 ServiceName = "Test Service",

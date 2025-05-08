@@ -1,11 +1,11 @@
 ﻿using Application;
 using Bogus;
 using Domain.Entities;
+using Domain.Enums;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Processors;
 using Infrastructure;
 using Infrastructure.Repositories.ClientRepository;
-using Infrastructure.Repositories.EmployeeRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -76,46 +76,26 @@ namespace ApplicaitonIntegrationTests
                 TablesToIgnore = ["VersionInfo"]
             });
         }
-        public async Task<Client> CreateClient()
+        public async Task<User> CreateUser()
         {
             using var scope = ServiceProvider.CreateScope();
-            var clientRepository = scope.ServiceProvider.GetRequiredService<IClientRepository>();
+            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
-            var clientId = await clientRepository.Create(new Client
+            var userId = await userRepository.Create(new User
             {
                 FirstName = _faker.Name.FirstName(),
                 LastName = _faker.Name.LastName(),
                 Email = _faker.Person.Email,
+                Role = UserRoles.Admin,
                 PhoneNumber = _faker.Person.Phone
             });
 
-            var client = await clientRepository.ReadById(clientId);
+            var user = await userRepository.ReadById(userId);
 
-            if (client == null)
-                throw new Exception("Can't create client");
+            if (user == null)
+                throw new Exception("Can't create user");
 
-            return client;
-        }
-        public async Task<Employee> CreateEmployee()
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var employeeRepository = scope.ServiceProvider.GetRequiredService<IEmployeeRepository>();
-
-            var employeeId = await employeeRepository.Create(new Employee
-            {
-                FirstName = _faker.Name.FirstName(),
-                LastName = _faker.Name.LastName(),
-                Email = _faker.Person.Email,
-                PhoneNumber = _faker.Person.Phone,
-                Position = "hairdresser"
-            });
-
-            var employee = await employeeRepository.ReadById(employeeId);
-
-            if (employee == null)
-                throw new Exception("Can't create employee");
-
-            return employee;
+            return user;
         }
         public async Task DisposeAsync()
         {
