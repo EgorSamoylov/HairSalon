@@ -63,6 +63,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _userService.Delete(id);

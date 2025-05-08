@@ -102,25 +102,16 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = (int)HttpStatusCode.TooManyRequests;
-    options.AddFixedWindowLimiter("login", limiterOptions =>
-    {
-        limiterOptions.Window = TimeSpan.FromMinutes(1); // 1-minute window
-        limiterOptions.PermitLimit = 5; // Max 5 login attempts per minute
-    });
-});
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("register", limiterOptions =>
+    // Общие ограничения для всех операций аутентификации
+    options.AddFixedWindowLimiter("auth", limiterOptions =>
     {
-        limiterOptions.Window = TimeSpan.FromMinutes(1); // 1-minute window
-        limiterOptions.PermitLimit = 5;       // Max 5 login attempts per minute
+        limiterOptions.Window = TimeSpan.FromMinutes(1); // 1-минутное окно
+        limiterOptions.PermitLimit = 5; // Максимум 5 запросов в минуту
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = 2;
+        limiterOptions.QueueLimit = 2; // Максимум 2 запроса в очереди
     });
 });
-
-builder.Services.AddScoped<IBCryptHasher, BCryptHasher>();
 
 var app = builder.Build();
 

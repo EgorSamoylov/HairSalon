@@ -11,7 +11,7 @@ namespace Api.Controllers
     [Route("[controller]")]
     public class AuthController(IAuthService authService) : ControllerBase
     {
-        [EnableRateLimiting("register")]
+        [EnableRateLimiting("auth")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
         {
@@ -19,7 +19,7 @@ namespace Api.Controllers
             return Created();
         }
 
-        [EnableRateLimiting("login")]
+        [EnableRateLimiting("auth")]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
