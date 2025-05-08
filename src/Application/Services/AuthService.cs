@@ -13,11 +13,10 @@ using System.Text;
 namespace Application.Services
 {
     public class AuthService(
-         IConfiguration configuration,
-         IMapper mapper,
-         IUserRepository userRepository,
-         IBCryptHasher hasher
-     ) : IAuthService
+        IConfiguration configuration,
+        IMapper mapper,
+        IUserRepository userRepository,
+        IBCryptHasher hasher) : IAuthService
     {
         public async Task<int> Register(RegistrationRequest request)
         {
@@ -58,9 +57,6 @@ namespace Application.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                 new Claim(ClaimTypes.GivenName, user.FirstName ?? string.Empty),
-                 new Claim(ClaimTypes.Surname, user.LastName ?? string.Empty),
                  new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
              }),
                 Expires = DateTime.UtcNow.AddMinutes(jwtExpirationMinutes),

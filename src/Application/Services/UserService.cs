@@ -6,7 +6,6 @@ using Domain.Entities;
 using Infrastructure.Repositories.ClientRepository;
 using Microsoft.Extensions.Logging;
 
-
 namespace Application.Services
 {
     public class UserService : IUserService

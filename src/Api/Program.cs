@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text;
+using System.Threading.RateLimiting;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,9 +65,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddProblemDetails();
-//builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
 builder.Services.AddExceptionHandler<AuthServiceExceptionHandler>();
+builder.Services.AddExceptionHandler<DbExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddInfrastructure();
@@ -105,6 +108,19 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.PermitLimit = 5; // Max 5 login attempts per minute
     });
 });
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("register", limiterOptions =>
+    {
+        limiterOptions.Window = TimeSpan.FromMinutes(1); // 1-minute window
+        limiterOptions.PermitLimit = 5;       // Max 5 login attempts per minute
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 2;
+    });
+});
+
+builder.Services.AddScoped<IBCryptHasher, BCryptHasher>();
 
 var app = builder.Build();
 

@@ -6,19 +6,14 @@ namespace Domain.Entities
     public class User
     {
         public int Id { get; set; }
-        [Column("first_name")]
         public required string FirstName { get; set; }
-        [Column("last_name")]
         public required string LastName { get; set; }
-        [Column("phone_number")]
         public required string PhoneNumber { get; set; }
         public required string Email { get; set; }
-        [Column("password_hash")]
         public string? PasswordHash { get; set; }
         public UserRoles Role { get; set; }
         public string? Note { get; set; }
         public string? Position { get; set; }
-        [Column("logo_attachment_id")]
         public int? LogoAttachmentId { get; set; }
     }
 }
