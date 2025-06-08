@@ -1,11 +1,11 @@
 ﻿using Application.Request;
-using Application.Response;
+using System.Security.Claims;
 
 namespace Application.Services
 {
     public interface IAuthService
     {
-        Task<int> Register(RegistrationRequest request);
-        Task<LoginResponse> Login(LoginRequest request);
+        Task<ClaimsPrincipal> Register(RegistrationRequest request);
+        Task<ClaimsPrincipal> Login(LoginRequest request);
     }
 }

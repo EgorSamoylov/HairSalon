@@ -1,18 +1,17 @@
-using Infrastructure;
-using Application;
-using Infrastructure.Database;
-using Api.ExceptionHandlers;
-using Serilog;
-using Api.Middleware;
-using Microsoft.OpenApi.Models;
 using Api.Configuration;
+using Api.ExceptionHandlers;
+using Api.Middleware;
+using Application;
+using Infrastructure;
+using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Net;
 using System.Text;
 using System.Threading.RateLimiting;
-using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,23 +79,14 @@ builder.Services.Configure<JwtSettings>(jwtSettings);
 var secret = jwtSettings["Secret"] ?? throw new ArgumentNullException("JwtSettings:Secret");
 
 // Add JWT Authentication
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication("HttponlyAuth")
+    .AddCookie("HttponlyAuth", options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
-        };
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.Name = "auth_token";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
 
 builder.Services.AddRateLimiter(options =>
@@ -111,6 +101,19 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit = 2;
     });
 });
+
+builder.Services.AddCors(
+    (options) =>
+    {
+        options.AddPolicy("AllowLocalhost", policy =>
+        {
+            policy.WithOrigins("localhost", "http://localhost:3000")
+            .AllowCredentials()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        });
+    }
+);
 
 var app = builder.Build();
 
@@ -128,6 +131,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowLocalhost");
 
 app.UseRateLimiter();
 app.UseSerilogRequestLogging();

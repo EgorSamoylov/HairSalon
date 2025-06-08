@@ -18,18 +18,21 @@ namespace Application.Services
         IUserRepository userRepository,
         IBCryptHasher hasher) : IAuthService
     {
-        public async Task<int> Register(RegistrationRequest request)
+        public async Task<ClaimsPrincipal> Register(RegistrationRequest request)
         {
             var user = mapper.Map<User>(request);
             user.PasswordHash = hasher.HashPassword(request.Password);
             user.Role = UserRoles.User;
 
             var userId = await userRepository.Create(user);
+            var createdUser = await userRepository.ReadById(userId);
 
-            return userId;
+            var principal = GenerateClaimsPrincipal(createdUser);
+
+            return principal;
         }
 
-        public async Task<LoginResponse> Login(LoginRequest request)
+        public async Task<ClaimsPrincipal> Login(LoginRequest request)
         {
             var user = await userRepository.ReadByEmail(request.Email);
             var passwordVerified = hasher.VerifyPassword(request.Password, user?.PasswordHash);
@@ -38,35 +41,20 @@ namespace Application.Services
                 throw new UnauthorizedAccessException();
             }
 
-            var token = GenerateJwtToken(user);
+            var principal = GenerateClaimsPrincipal(user);
 
-            return new LoginResponse() { Token = token };
+            return principal;
         }
 
-        private string GenerateJwtToken(User user)
+        private ClaimsPrincipal GenerateClaimsPrincipal(User user)
         {
-            var jwtSecret = configuration["JwtSettings:Secret"] ?? throw new ArgumentNullException("JwtSettings:Secret");
-            var jwtIssuer = configuration["JwtSettings:Issuer"] ?? throw new ArgumentNullException("JwtSettings:Issuer");
-            var jwtAudience = configuration["JwtSettings:Audience"] ??
-                              throw new ArgumentNullException("JwtSettings:Audience");
-            var jwtExpirationMinutes = int.Parse(configuration["JwtSettings:ExpirationInMinutes"] ?? "60");
-
-            var key = Encoding.ASCII.GetBytes(jwtSecret);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
+            var identity = new ClaimsIdentity(new[]
+                 {
                  new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-             }),
-                Expires = DateTime.UtcNow.AddMinutes(jwtExpirationMinutes),
-                Issuer = jwtIssuer,
-                Audience = jwtAudience,
-                SigningCredentials =
-                    new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+             }, "HttponlyAuth");
+                        var principal = new ClaimsPrincipal(identity);
+
+            return principal;
         }
     }
 }
