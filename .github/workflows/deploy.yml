@@ -28,7 +28,6 @@ jobs:
         run: docker push ghcr.io/egorsamoylov/hairsalon:latest
 
   deploy:
-    if: github.event_name == 'push' || inputs.deploy == 'true'
     runs-on: self-hosted
     needs: build
 
