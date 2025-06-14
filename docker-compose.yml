@@ -15,7 +15,7 @@ services:
     networks:
       - hairsalon-network
 
-  hairsalon:
+  hairsalon-backend:
     image: ghcr.io/egorsamoylov/hairsalon:latest
     restart: always
     environment:
