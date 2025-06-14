@@ -13,9 +13,9 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - hairsalon-network
+      - network
 
-  hairsalon-backend:
+  backend:
     image: ghcr.io/egorsamoylov/hairsalon:latest
     restart: always
     environment:
@@ -26,21 +26,21 @@ services:
     ports:
       - "9032:9032"
     networks:
-      - hairsalon-network
+      - network
 
-  hairsalon-frontend:
+  frontend:
     image: ghcr.io/egorsamoylov/hairsalonfrontts:latest
     restart: always
     ports:
       - "80:80"
     depends_on:
-      - hairsalon-backend
+      - backend
     networks:
-      - hairsalon-network
+      - network
 
 volumes:
   pgdata:
 
 networks:
-  hairsalon-network:
+  network:
     driver: bridge
