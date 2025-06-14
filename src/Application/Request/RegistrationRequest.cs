@@ -13,6 +13,8 @@ namespace Application.Request
         public string FirstName { get; set; } = null!;
         public required string Email { get; set; }
         public required string Password { get; set; }
+
+        public required string PhoneNumber { get; set; }
     }
 
     public class RegistrationRequestValidator : AbstractValidator<RegistrationRequest>
