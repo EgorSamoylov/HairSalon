@@ -33,7 +33,7 @@ namespace Infrastructure.Repositories.ClientRepository
 
         public async Task<User?> ReadByEmail(string email)
         {
-            const string query = "SELECT id, first_name, last_name, phone_number, email, note, position, role, logo_attachment_id FROM users WHERE email = @Email";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, note, position, role, logo_attachment_id, password_hash FROM users WHERE email = @Email";
             return await _connection.QuerySingleOrDefaultAsync<User>(query, new { Email = email });
         }
 

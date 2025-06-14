@@ -27,7 +27,6 @@ namespace Api.Controllers
         }
 
         [HttpGet("userInfo")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserInfo()
         {
             var userId = User.GetUserId();

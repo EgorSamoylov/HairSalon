@@ -1,0 +1,90 @@
+name: Build and Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u egorsamoylov --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/egorsamoylov/hairsalon:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/egorsamoylov/hairsalon:latest
+
+  deploy:
+    if: github.event_name == 'push' || inputs.deploy == 'true'
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Docker on Debian (Bookworm)
+        run: |
+          if ! command -v docker &> /dev/null; then
+            echo "Docker not found. Installing..."
+
+            sudo rm -f /etc/apt/sources.list.d/docker.list
+
+            sudo apt-get update
+            sudo apt-get install -y \
+              ca-certificates \
+              curl \
+              gnupg \
+              lsb-release
+
+            sudo install -m 0755 -d /etc/apt/keyrings
+
+            curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor | sudo tee /etc/apt/keyrings/docker.gpg > /dev/null
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+              bookworm stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+            echo "Docker installed successfully."
+          else
+            echo "Docker is already installed."
+          fi
+          
+      - name: Check Docker version
+        run: docker --version
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p /home/user/app
+          cp ./docker-compose.yml /home/user/app/
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | sudo docker login ghcr.io -u egorsamoylov --password-stdin
+
+      - name: Pull and deploy backend
+        run: |
+          set -e
+          cd /home/user/app
+          export COMPOSE_INTERACTIVE_NO_CLI=1
+          sudo docker compose pull hairsalon
+          sudo docker compose up -d hairsalon
