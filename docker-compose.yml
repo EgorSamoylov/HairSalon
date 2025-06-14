@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hairsalon_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - hairsalon-network
+
+  hairsalon:
+    image: ghcr.io/egorsamoylov/hairsalon:latest
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__PostgresDB=Host=db;Database=hairsalon_db;Username=postgres;Password=password
+    depends_on:
+      - db
+    ports:
+      - "9032:9032"
+    networks:
+      - hairsalon-network
+
+  hairsalon-frontend:
+    image: ghcr.io/egorsamoylov/hairsalonfrontts:latest
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - hairsalon-backend
+    networks:
+      - hairsalon-network
+
+volumes:
+  pgdata:
+
+networks:
+  hairsalon-network:
+    driver: bridge

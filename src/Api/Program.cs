@@ -4,6 +4,7 @@ using Api.Middleware;
 using Application;
 using Infrastructure;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
@@ -86,8 +87,20 @@ builder.Services.AddAuthentication("HttponlyAuth")
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.Cookie.Name = "auth_token";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+        options.LoginPath = "/Auth/login";
+
+        // Отключаем редирект и возвращаем 401
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = 401;
+                context.Response.Headers.Append("X-Auth-Redirect", "/login");
+                return Task.CompletedTask;
+            }
+        };
     });
+
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -107,10 +120,11 @@ builder.Services.AddCors(
     {
         options.AddPolicy("AllowLocalhost", policy =>
         {
-            policy.WithOrigins("localhost", "http://localhost:3000")
+            policy.WithOrigins("localhost", "http://localhost:3000", "158.160.177.163")
             .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader();
+
         });
     }
 );
