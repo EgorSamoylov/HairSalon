@@ -85,11 +85,11 @@ builder.Services.AddAuthentication("HttponlyAuth")
     {
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.Name = "auth_token";
         options.LoginPath = "/Auth/login";
 
-        // Îòêëþ÷àåì ðåäèðåêò è âîçâðàùàåì 401
+        // ÃŽÃ²ÃªÃ«Ã¾Ã·Ã Ã¥Ã¬ Ã°Ã¥Ã¤Ã¨Ã°Ã¥ÃªÃ² Ã¨ Ã¢Ã®Ã§Ã¢Ã°Ã Ã¹Ã Ã¥Ã¬ 401
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = context =>
