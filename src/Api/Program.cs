@@ -83,7 +83,7 @@ var secret = jwtSettings["Secret"] ?? throw new ArgumentNullException("JwtSettin
 builder.Services.AddAuthentication("HttponlyAuth")
     .AddCookie("HttponlyAuth", options =>
     {
-        options.Cookie.HttpOnly = false;
+        options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.None;
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.Name = "auth_token";
