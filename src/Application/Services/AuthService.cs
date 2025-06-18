@@ -56,5 +56,17 @@ namespace Application.Services
 
             return principal;
         }
+
+        public async Task<ClaimsPrincipal> RegisterEmployee(RegistrationRequest request)
+        {
+            var user = mapper.Map<User>(request);
+            user.PasswordHash = hasher.HashPassword(request.Password);
+            user.Role = UserRoles.Employee; // Устанавливаем роль Employee
+
+            var userId = await userRepository.Create(user);
+            var createdUser = await userRepository.ReadById(userId);
+
+            return GenerateClaimsPrincipal(createdUser);
+        }
     }
 }

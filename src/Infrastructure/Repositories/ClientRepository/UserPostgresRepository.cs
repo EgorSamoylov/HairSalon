@@ -17,11 +17,23 @@ namespace Infrastructure.Repositories.ClientRepository
         public async Task<int> Create(User user)
         {
             const string query =
-                @"INSERT INTO  users (first_name, last_name, phone_number, email, note, position, password_hash, role)
-                VALUES (@FirstName, @LastName, @PhoneNumber, @Email, @Note, @Position, @Passwordhash, @Role::user_role)
-                RETURNING id";
+                @"INSERT INTO users 
+            (first_name, last_name, phone_number, email, note, position, password_hash, role)
+        VALUES 
+            (@FirstName, @LastName, @PhoneNumber, @Email, @Note, @Position, @PasswordHash, @Role::user_role)
+        RETURNING id";
 
-            return await _connection.ExecuteScalarAsync<int>(query, user.AsDapperParams());
+            return await _connection.ExecuteScalarAsync<int>(query, new
+            {
+                user.FirstName,
+                user.LastName,
+                user.PhoneNumber,
+                user.Email,
+                user.Note,
+                user.Position,
+                user.PasswordHash,
+                Role = user.Role.ToString()
+            });
         }
 
         public async Task<bool> Delete(int id)
@@ -33,7 +45,7 @@ namespace Infrastructure.Repositories.ClientRepository
 
         public async Task<User?> ReadByEmail(string email)
         {
-            const string query = "SELECT id, first_name, last_name, phone_number, email, note, position, role, logo_attachment_id, password_hash FROM users WHERE email = @Email";
+            const string query = "SELECT id, first_name, last_name, phone_number, email, note, position, role::text, logo_attachment_id, password_hash FROM users WHERE email = @Email";
             return await _connection.QuerySingleOrDefaultAsync<User>(query, new { Email = email });
         }
 

@@ -10,5 +10,7 @@ namespace Domain.Entities
         public int ServiceId { get; set; }
         public DateTime AppointmentDateTime { get; set; }
         public string? Notes { get; set; }
+        public bool IsCompleted { get; set; }
+        public bool IsCancelled { get; set; }
     }
 }
