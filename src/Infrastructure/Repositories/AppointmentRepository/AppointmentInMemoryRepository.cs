@@ -31,6 +31,16 @@ namespace Infrastructure.Repositories.AppointmentRepository
             return Task.FromResult(true);
         }
 
+        public Task<List<Appointment>> GetByClient(int clientId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Appointment>> GetByEmployee(int employeeId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<Appointment>> ReadAll()
         {
             return Task.FromResult(_appointments);

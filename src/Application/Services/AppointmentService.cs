@@ -142,5 +142,32 @@ namespace Application.Services
 
             _logger.LogInformation("Appointment with id {Id} successfully updated", request.AppointmentId);
         }
+
+        public async Task<IEnumerable<AppointmentDTO>> GetByEmployee(int employeeId)
+        {
+            var appointments = await _appointmentRepository.GetByEmployee(employeeId);
+            return _mapper.Map<IEnumerable<AppointmentDTO>>(appointments);
+        }
+
+        public async Task<IEnumerable<AppointmentDTO>> GetByClient(int clientId)
+        {
+            var appointments = await _appointmentRepository.GetByClient(clientId);
+            return _mapper.Map<IEnumerable<AppointmentDTO>>(appointments);
+        }
+
+        public async Task UpdateStatus(int id, UpdateAppointmentStatusRequest request)
+        {
+            var appointment = await _appointmentRepository.ReadById(id);
+            if (appointment == null)
+                throw new NotFoundApplicationException("Appointment not found");
+
+            if (request.IsCompleted.HasValue)
+                appointment.IsCompleted = request.IsCompleted.Value;
+
+            if (request.IsCancelled.HasValue)
+                appointment.IsCancelled = request.IsCancelled.Value;
+
+            await _appointmentRepository.Update(appointment);
+        }
     }
 }

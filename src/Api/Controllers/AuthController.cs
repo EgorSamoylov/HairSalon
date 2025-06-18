@@ -37,5 +37,14 @@ namespace Api.Controllers
             await HttpContext.SignOutAsync();
             return Ok();
         }
+
+        [HttpPost("register-employee")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterEmployee([FromBody] RegistrationRequest request)
+        {
+            var principal = await authService.RegisterEmployee(request);
+            await HttpContext.SignInAsync(principal);
+            return Created();
+        }
     }
 }
