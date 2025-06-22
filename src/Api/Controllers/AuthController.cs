@@ -39,7 +39,6 @@ namespace Api.Controllers
         }
 
         [HttpPost("register-employee")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterEmployee([FromBody] RegistrationRequest request)
         {
             var principal = await authService.RegisterEmployee(request);

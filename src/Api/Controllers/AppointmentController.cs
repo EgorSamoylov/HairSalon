@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using Api.Extensions;
+using Application.DTOs;
 using Application.Request.AppointmentRequest;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -66,10 +67,26 @@ namespace Api.Controllers
             return Ok(appointments);
         }
 
+        //[HttpPatch("{id}/status")]
+        //public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateAppointmentStatusRequest request)
+        //{
+        //    await _appointmentService.UpdateStatus(id, request);
+        //    return NoContent();
+        //}
+
+        [HttpGet("user-appointments")]
+        public async Task<IActionResult> GetUserAppointments()
+        {
+            var userContext = HttpContext.GetUserContext(); // Получаем контекст пользователя
+            var appointments = await _appointmentService.GetByUser(userContext);
+            return Ok(appointments);
+        }
+
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateAppointmentStatusRequest request)
         {
-            await _appointmentService.UpdateStatus(id, request);
+            var userContext = HttpContext.GetUserContext();
+            await _appointmentService.UpdateStatus(id, request, userContext);
             return NoContent();
         }
     }

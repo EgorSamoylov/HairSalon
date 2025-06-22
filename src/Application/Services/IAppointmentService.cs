@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Request.AmenityRequest;
 using Application.Request.AppointmentRequest;
+using Domain.Entities;
 
 namespace Application.Services
 {
@@ -13,6 +14,8 @@ namespace Application.Services
         public Task Delete(int id);
         public Task<IEnumerable<AppointmentDTO>> GetByEmployee(int employeeId);
         public Task<IEnumerable<AppointmentDTO>> GetByClient(int clientId);
+        public Task<IEnumerable<AppointmentDTO>> GetByUser(UserContext userContext);
+        public Task UpdateStatus(int id, UpdateAppointmentStatusRequest request, UserContext userContext);
         public Task UpdateStatus(int id, UpdateAppointmentStatusRequest request);
     }
 }

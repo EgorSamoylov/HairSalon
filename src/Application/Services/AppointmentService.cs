@@ -155,6 +155,20 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<AppointmentDTO>>(appointments);
         }
 
+        //public async Task<IEnumerable<AppointmentDTO>> GetByUser(UserContext userContext)
+        //{
+        //    // Используем userContext.Role для определения прав доступа
+        //    IEnumerable<Appointment> appointments = userContext.Role switch
+        //    {
+        //        "Admin" => await _appointmentRepository.ReadAll(),
+        //        "Employee" => await _appointmentRepository.GetByEmployee(userContext.UserId),
+        //        "Client" => await _appointmentRepository.GetByClient(userContext.UserId),
+        //        _ => throw new UnauthorizedAccessException("Invalid user role")
+        //    };
+
+        //    return _mapper.Map<IEnumerable<AppointmentDTO>>(appointments);
+        //}
+
         public async Task UpdateStatus(int id, UpdateAppointmentStatusRequest request)
         {
             var appointment = await _appointmentRepository.ReadById(id);
@@ -168,6 +182,63 @@ namespace Application.Services
                 appointment.IsCancelled = request.IsCancelled.Value;
 
             await _appointmentRepository.Update(appointment);
+        }
+
+        public async Task<IEnumerable<AppointmentDTO>> GetByUser(UserContext userContext)
+        {
+            IEnumerable<Appointment> appointments;
+
+            switch (userContext.Role)
+            {
+                case "Admin":
+                    appointments = await _appointmentRepository.ReadAll();
+                    break;
+                case "Employee":
+                    appointments = await _appointmentRepository.GetByEmployee(userContext.UserId);
+                    break;
+                case "Client":
+                    appointments = await _appointmentRepository.GetByClient(userContext.UserId);
+                    break;
+                default:
+                    throw new UnauthorizedAccessException("Invalid user role");
+            }
+
+            return _mapper.Map<IEnumerable<AppointmentDTO>>(appointments);
+        }
+
+        public async Task UpdateStatus(int id, UpdateAppointmentStatusRequest request, UserContext userContext)
+        {
+            var appointment = await _appointmentRepository.ReadById(id);
+            if (appointment == null)
+                throw new NotFoundApplicationException("Appointment not found");
+
+            CheckAccessRights(appointment, userContext);
+
+            // Только сотрудник или админ может менять статус
+            if (userContext.Role != "Admin" && userContext.Role != "Employee")
+            {
+                throw new UnauthorizedAccessException("Only employees can update appointment status");
+            }
+
+            if (request.IsCompleted.HasValue)
+                appointment.IsCompleted = request.IsCompleted.Value;
+
+            if (request.IsCancelled.HasValue)
+                appointment.IsCancelled = request.IsCancelled.Value;
+
+            await _appointmentRepository.Update(appointment);
+        }
+
+        private void CheckAccessRights(Appointment appointment, UserContext userContext)
+        {
+            bool hasAccess = userContext.Role == "Admin" ||
+                            (userContext.Role == "Employee" && appointment.EmployeeId == userContext.UserId) ||
+                            (userContext.Role == "Client" && appointment.ClientId == userContext.UserId);
+
+            if (!hasAccess)
+            {
+                throw new UnauthorizedAccessException("You don't have access to this appointment");
+            }
         }
     }
 }

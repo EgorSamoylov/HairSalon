@@ -58,7 +58,9 @@ namespace Infrastructure.Repositories.AppointmentRepository
                     employee_id AS employeeId,
                     service_id AS serviceId,
                     appointment_datetime AS appointmentDateTime,
-                    notes
+                    notes,
+                    is_completed AS isCompleted,
+                    is_cancelled AS isCancelled
                 FROM appointments");
 
             return appointments.ToList();
