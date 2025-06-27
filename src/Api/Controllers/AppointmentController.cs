@@ -66,28 +66,5 @@ namespace Api.Controllers
             var appointments = await _appointmentService.GetByClient(clientId);
             return Ok(appointments);
         }
-
-        //[HttpPatch("{id}/status")]
-        //public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateAppointmentStatusRequest request)
-        //{
-        //    await _appointmentService.UpdateStatus(id, request);
-        //    return NoContent();
-        //}
-
-        [HttpGet("user-appointments")]
-        public async Task<IActionResult> GetUserAppointments()
-        {
-            var userContext = HttpContext.GetUserContext(); // Получаем контекст пользователя
-            var appointments = await _appointmentService.GetByUser(userContext);
-            return Ok(appointments);
-        }
-
-        [HttpPatch("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateAppointmentStatusRequest request)
-        {
-            var userContext = HttpContext.GetUserContext();
-            await _appointmentService.UpdateStatus(id, request, userContext);
-            return NoContent();
-        }
     }
 }

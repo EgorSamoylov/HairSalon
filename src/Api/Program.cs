@@ -125,32 +125,6 @@ using (var scope = app.Services.CreateScope())
     migrationRunner.Run();
 }
 
-// Добавляем Middleware для установки UserContext
-app.Use(async (context, next) =>
-{
-    // Проверяем, аутентифицирован ли пользователь
-    if (context.User.Identity?.IsAuthenticated == true)
-    {
-        // Получаем данные из claims
-        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
-        var roleClaim = context.User.FindFirst(ClaimTypes.Role);
-
-        if (userIdClaim != null && roleClaim != null)
-        {
-            // Создаем UserContext и сохраняем в HttpContext.Items
-            var userContext = new UserContext
-            {
-                UserId = int.Parse(userIdClaim.Value),
-                Role = roleClaim.Value
-            };
-
-            context.Items["UserContext"] = userContext;
-        }
-    }
-
-    await next();
-});
-
 app.UseMiddleware<PerformanceMiddleware>(TimeSpan.FromMilliseconds(700));
 app.UseMiddleware<CurrentUserMiddleware>();
 
