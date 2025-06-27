@@ -76,5 +76,11 @@ namespace Infrastructure.Repositories.ClientRepository
             var affectedRows = await _connection.ExecuteAsync(query, user.AsDapperParams());
             return affectedRows > 0;
         }
+
+        public async Task<string?> GetUserRoleById(int id)
+        {
+            const string query = "SELECT role::text FROM users WHERE id = @Id";
+            return await _connection.QuerySingleOrDefaultAsync<string>(query, new { Id = id });
+        }
     }
 }

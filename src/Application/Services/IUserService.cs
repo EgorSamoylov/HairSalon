@@ -10,5 +10,6 @@ namespace Application.Services
         public Task<int> Add(CreateUserRequest user);
         public Task Update(UpdateUserRequest user);
         public Task Delete(int id);
+        Task<string?> GetUserRoleById(int id);
     }
 }

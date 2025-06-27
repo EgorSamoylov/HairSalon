@@ -9,5 +9,12 @@ namespace Api.Extensions
             var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.TryParse(userIdClaim, out var id) ? id : null;
         }
+
+
+        // Новый метод для получения роли пользователя
+        public static string? GetUserRole(this ClaimsPrincipal user)
+        {
+            return user?.FindFirst(ClaimTypes.Role)?.Value;
+        }
     }
 }
