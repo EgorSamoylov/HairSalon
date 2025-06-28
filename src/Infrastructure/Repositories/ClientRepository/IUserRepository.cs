@@ -10,5 +10,6 @@ namespace Infrastructure.Repositories.ClientRepository
         public Task<bool> Update(User user);
         Task<User?> ReadByEmail(string email);
         public Task<bool> Delete(int id);
+        Task<string?> GetUserRoleById(int id);
     }
 }

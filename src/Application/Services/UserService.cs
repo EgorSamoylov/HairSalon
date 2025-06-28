@@ -149,5 +149,21 @@ namespace Application.Services
 
             _logger.LogInformation("User with id {Id} successfully updated", request.UserId);
         }
+
+        public async Task<string?> GetUserRoleById(int id)
+        {
+            _logger.LogInformation("Getting role for user with id {Id}", id);
+
+            var role = await _userRepository.GetUserRoleById(id);
+
+            if (role == null)
+            {
+                _logger.LogWarning("User with id {Id} not found when getting role", id);
+                throw new NotFoundApplicationException("User not found");
+            }
+
+            _logger.LogInformation("Retrieved role {Role} for user with id {Id}", role, id);
+            return role;
+        }
     }
 }

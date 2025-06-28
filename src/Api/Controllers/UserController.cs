@@ -30,10 +30,19 @@ namespace Api.Controllers
         public async Task<IActionResult> GetUserInfo()
         {
             var userId = User.GetUserId();
+            
             if (!userId.HasValue)
             {
                 return NotFound();
             }
+
+            var userRole = await _userService.GetUserRoleById(userId.GetValueOrDefault());
+
+            if (string.IsNullOrEmpty(userRole))
+            {
+                return NotFound();
+            }
+
             var user = await _userService.GetById(userId.Value);
             return Ok(user);
         }

@@ -1,17 +1,17 @@
 using Api.Configuration;
 using Api.ExceptionHandlers;
+using Api.Extensions;
 using Api.Middleware;
 using Application;
+using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Net;
-using System.Text;
+using System.Security.Claims;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,14 +27,12 @@ Log.Logger = new LoggerConfiguration()
         retainedFileCountLimit: 7,
         rollOnFileSizeLimit: true,
         outputTemplate: logPattern)
-.CreateLogger();
+    .CreateLogger();
 
 builder.Services.AddSerilog();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "HairSalon API", Version = "v1" });
@@ -74,12 +72,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 
-// JWT Configuration
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-builder.Services.Configure<JwtSettings>(jwtSettings);
-var secret = jwtSettings["Secret"] ?? throw new ArgumentNullException("JwtSettings:Secret");
-
-// Add JWT Authentication
+// Настройка аутентификации через куки
 builder.Services.AddAuthentication("HttponlyAuth")
     .AddCookie("HttponlyAuth", options =>
     {
@@ -89,7 +82,6 @@ builder.Services.AddAuthentication("HttponlyAuth")
         options.Cookie.Name = "auth_token";
         options.LoginPath = "/Auth/login";
 
-        // Îòêëþ÷àåì ðåäèðåêò è âîçâðàùàåì 401
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = context =>
@@ -100,7 +92,6 @@ builder.Services.AddAuthentication("HttponlyAuth")
             }
         };
     });
-
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -115,19 +106,16 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-builder.Services.AddCors(
-    (options) =>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
     {
-        options.AddPolicy("AllowLocalhost", policy =>
-        {
-            policy.WithOrigins("localhost", "http://localhost:3000", "http://158.160.177.163")
+        policy.WithOrigins("localhost", "http://localhost:3000", "http://158.160.177.163")
             .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader();
-
-        });
-    }
-);
+    });
+});
 
 var app = builder.Build();
 
@@ -138,8 +126,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseMiddleware<PerformanceMiddleware>(TimeSpan.FromMilliseconds(700));
+app.UseMiddleware<CurrentUserMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -147,14 +135,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowLocalhost");
-
 app.UseRateLimiter();
 app.UseSerilogRequestLogging();
-
 app.UseExceptionHandler();
-
 app.UseHttpsRedirection();
 
+// Важно: UseAuthentication() и UseAuthorization() должны быть перед MapControllers()
 app.UseAuthentication();
 app.UseAuthorization();
 

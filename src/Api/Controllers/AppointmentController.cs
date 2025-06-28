@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using Api.Extensions;
+using Application.DTOs;
 using Application.Request.AppointmentRequest;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,20 @@ namespace Api.Controllers
         {
             await _appointmentService.Delete(id);
             return NoContent();
+        }
+
+        [HttpGet("employee/{employeeId}")]
+        public async Task<IActionResult> GetByEmployee(int employeeId)
+        {
+            var appointments = await _appointmentService.GetByEmployee(employeeId);
+            return Ok(appointments);
+        }
+
+        [HttpGet("client/{clientId}")]
+        public async Task<IActionResult> GetByClient(int clientId)
+        {
+            var appointments = await _appointmentService.GetByClient(clientId);
+            return Ok(appointments);
         }
     }
 }
